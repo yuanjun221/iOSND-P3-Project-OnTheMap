@@ -71,19 +71,19 @@ extension LoginViewController {
 // MARK: - View Shifting Behavior
 extension LoginViewController {
     func keyboardWillShow() {
-        view.frame.origin.y = -60
-        onTheMapLabel.frame.origin.y = 10
-        UIView.animateWithDuration(0.25, animations: {
-            self.signUpButton.alpha = 0
-        })
+        setView(withViewOffset: -60, labelViewOffset: 10, signUpButtonAlpha: 0)
 
     }
     
     func keyboardWillHide() {
-        view.frame.origin.y = 0
-        onTheMapLabel.frame.origin.y = 46
+        setView(withViewOffset: 0, labelViewOffset: 46, signUpButtonAlpha: 1)
+    }
+    
+    func setView(withViewOffset viewOffset: CGFloat, labelViewOffset: CGFloat, signUpButtonAlpha: CGFloat) {
+        view.frame.origin.y = viewOffset
+        onTheMapLabel.frame.origin.y = labelViewOffset
         UIView.animateWithDuration(0.25, animations: {
-            self.signUpButton.alpha = 1
+            self.signUpButton.alpha = signUpButtonAlpha
         })
     }
     
