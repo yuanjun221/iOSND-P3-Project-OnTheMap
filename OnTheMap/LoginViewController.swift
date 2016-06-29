@@ -11,7 +11,8 @@ import UIKit
 
 // MARK: - View Controller Properties
 class LoginViewController: UIViewController {
-    @IBOutlet weak var onTheMapLabel: UILabel!
+
+    @IBOutlet weak var udacityImageView: UIImageView!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var socialView: UIView!
@@ -71,16 +72,16 @@ extension LoginViewController {
 // MARK: - View Shifting Behavior
 extension LoginViewController {
     func keyboardWillShow() {
-        setView(withViewOffset: -60, labelViewOffset: 10, signUpButtonAlpha: 0)
+        setView(withViewOffset: -100, imageViewOffset: -20, signUpButtonAlpha: 0)
     }
     
     func keyboardWillHide() {
-        setView(withViewOffset: 0, labelViewOffset: 46, signUpButtonAlpha: 1)
+        setView(withViewOffset: 0, imageViewOffset: 41, signUpButtonAlpha: 1)
     }
     
-    func setView(withViewOffset viewOffset: CGFloat, labelViewOffset: CGFloat, signUpButtonAlpha: CGFloat) {
+    func setView(withViewOffset viewOffset: CGFloat, imageViewOffset: CGFloat, signUpButtonAlpha: CGFloat) {
         view.frame.origin.y = viewOffset
-        onTheMapLabel.frame.origin.y = labelViewOffset
+        udacityImageView.frame.origin.y = imageViewOffset
         UIView.animateWithDuration(0.25, animations: {
             self.signUpButton.alpha = signUpButtonAlpha
         })
