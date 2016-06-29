@@ -36,7 +36,7 @@ extension LoginViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
-        loginButton.layer.cornerRadius = 2.0
+        loginButton.layer.cornerRadius = 4.0
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -72,7 +72,6 @@ extension LoginViewController {
 extension LoginViewController {
     func keyboardWillShow() {
         setView(withViewOffset: -60, labelViewOffset: 10, signUpButtonAlpha: 0)
-
     }
     
     func keyboardWillHide() {
