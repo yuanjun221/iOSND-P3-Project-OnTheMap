@@ -11,15 +11,12 @@ import UIKit
 
 // MARK: - View Controller Properties
 class LoginViewController: UIViewController {
-
     @IBOutlet weak var udacityImageView: UIImageView!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var socialView: UIView!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
-    
-    
     
     private var isSocialViewHidden = true
 }
@@ -112,6 +109,13 @@ extension LoginViewController {
         })
         isSocialViewHidden = !isHidden
     }
+    
+    @IBAction func login(sender: AnyObject) {
+        
+        
+        
+    }
+    
     
 }
 
