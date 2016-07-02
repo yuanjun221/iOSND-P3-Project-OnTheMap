@@ -229,10 +229,10 @@
             </objects>
             <point key="canvasLocation" x="990" y="429"/>
         </scene>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="5E8-hH-sv7">
             <objects>
-                <viewController id="43c-KG-gL1" sceneMemberID="viewController">
+                <viewController id="43c-KG-gL1" customClass="MapViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="IFl-7Y-kZv"/>
                         <viewControllerLayoutGuide type="bottom" id="23u-ce-MiM"/>
@@ -241,13 +241,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="V0u-W2-XJI">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="V0u-W2-XJI">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="V0u-W2-XJI" firstAttribute="height" secondItem="fmc-u5-IwK" secondAttribute="height" id="6ZQ-yh-Re6"/>
+                            <constraint firstItem="V0u-W2-XJI" firstAttribute="width" secondItem="fmc-u5-IwK" secondAttribute="width" id="YU7-03-rHY"/>
+                            <constraint firstItem="V0u-W2-XJI" firstAttribute="centerX" secondItem="fmc-u5-IwK" secondAttribute="centerX" id="mGb-r7-Vlb"/>
+                            <constraint firstItem="V0u-W2-XJI" firstAttribute="centerY" secondItem="fmc-u5-IwK" secondAttribute="centerY" id="txl-Qb-C39"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="lZx-eA-wbh"/>
+                    <connections>
+                        <outlet property="mapView" destination="V0u-W2-XJI" id="FpG-Ou-aOV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xzh-kw-NKl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
