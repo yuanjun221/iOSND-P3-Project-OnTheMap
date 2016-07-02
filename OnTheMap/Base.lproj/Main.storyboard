@@ -129,29 +129,19 @@
                                 <rect key="frame" x="0.0" y="528" width="600" height="72"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ChW-IW-8Ba" userLabel="LineLeft">
-                                        <rect key="frame" x="20" y="8" width="180" height="1"/>
+                                        <rect key="frame" x="20" y="8" width="177" height="1"/>
                                         <color key="backgroundColor" red="0.2901984775" green="0.34078360819999998" blue="0.47983243780000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="5yo-fr-LnK"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NuP-Qd-wA7" userLabel="LineRight">
-                                        <rect key="frame" x="400" y="8" width="180" height="1"/>
+                                        <rect key="frame" x="397" y="8" width="183" height="1"/>
                                         <color key="backgroundColor" red="0.2901984775" green="0.34078360819999998" blue="0.47983243780000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="NS3-6d-qUy"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nCY-ph-5NY">
-                                        <rect key="frame" x="216" y="-7" width="175" height="29"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title="Sign In with Social Account">
-                                            <color key="titleColor" red="0.35537695109269535" green="0.41512163206439329" blue="0.59435567497948716" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="toggleSocialView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uJX-HM-FAy"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n9w-sE-Z3h" userLabel="FacebookButton">
                                         <rect key="frame" x="279" y="22" width="42" height="42"/>
                                         <constraints>
@@ -159,6 +149,16 @@
                                             <constraint firstAttribute="width" constant="42" id="ufO-fe-p55"/>
                                         </constraints>
                                         <state key="normal" image="Facebook"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nCY-ph-5NY">
+                                        <rect key="frame" x="213" y="-7" width="175" height="29"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <state key="normal" title="Sign In with Social Account">
+                                            <color key="titleColor" red="0.35537695109269535" green="0.41512163206439329" blue="0.59435567497948716" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="toggleSocialView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uJX-HM-FAy"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -171,7 +171,7 @@
                                     <constraint firstItem="n9w-sE-Z3h" firstAttribute="centerX" secondItem="Y12-GK-kde" secondAttribute="centerX" id="fiW-09-F18"/>
                                     <constraint firstItem="ChW-IW-8Ba" firstAttribute="trailing" secondItem="nCY-ph-5NY" secondAttribute="leading" constant="-16" id="hKv-ry-IrT"/>
                                     <constraint firstItem="n9w-sE-Z3h" firstAttribute="top" secondItem="Y12-GK-kde" secondAttribute="top" constant="22" id="qcU-fG-2me"/>
-                                    <constraint firstItem="nCY-ph-5NY" firstAttribute="centerX" secondItem="Y12-GK-kde" secondAttribute="centerX" constant="3.5" id="sQs-JO-Lcn"/>
+                                    <constraint firstItem="nCY-ph-5NY" firstAttribute="centerX" secondItem="Y12-GK-kde" secondAttribute="centerX" id="sQs-JO-Lcn"/>
                                     <constraint firstItem="NuP-Qd-wA7" firstAttribute="top" secondItem="Y12-GK-kde" secondAttribute="top" constant="8" id="zYT-uA-31J"/>
                                 </constraints>
                             </view>
@@ -185,6 +185,9 @@
                             <constraint firstItem="eIk-7Z-jPT" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="eul-EP-BdL"/>
                             <constraint firstItem="Y12-GK-kde" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="ztt-dO-CFs"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="umA-G7-IjL" appends="YES" id="cYc-FM-0MQ"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="z71-Wx-baS" id="MHD-qr-MwI"/>
@@ -203,6 +206,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="umA-G7-IjL">
+                    <connections>
+                        <action selector="tapView:" destination="BYZ-38-t0r" id="X3Y-7b-h5l"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="313" y="429"/>
         </scene>

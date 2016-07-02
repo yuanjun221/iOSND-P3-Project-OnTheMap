@@ -14,6 +14,8 @@ class LoginViewController: UIViewController {
     
     // MARK: Properties
     private var isSocialLoginViewHidden = false
+    private var iscredentialLoginViewShifted = false
+    private var isViewWating = false
     
     // MARK: Outlets
     @IBOutlet weak var udacityImageView: UIImageView!
@@ -47,7 +49,7 @@ extension LoginViewController {
         super.viewWillAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
         loginButton.layer.cornerRadius = 4.0
-        setSocialLoginViewBottomOffsetBy(isSocialLoginViewHidden)
+        hideSocialLoginViewBy(isSocialLoginViewHidden)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -67,32 +69,41 @@ extension LoginViewController {
 
 // MARK: - View Touching Behavior
 extension LoginViewController {
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        dismissKeyboardForTextField(emailTextField)
-        dismissKeyboardForTextField(passwordTextField)
+    
+    @IBAction func tapView(sender: AnyObject) {
+        if !isViewWating {
+            dismissKeyboardForTextField(emailTextField)
+            dismissKeyboardForTextField(passwordTextField)
+            
+            if iscredentialLoginViewShifted {
+                moveUpCredentialLoginView(false)
+            }
+        }
     }
     
     func dismissKeyboardForTextField(textField: UITextField) {
         if textField.isFirstResponder() {
             textField.resignFirstResponder()
-            setView(withViewOffset: -20, imageViewOffset: 42, signUpButtonAlpha: 1)
         }
     }
 }
 
-// MARK: - View Shifting Behavior
+// MARK: - View Moving Behavior
 extension LoginViewController {
     func keyboardWillShow() {
-        setView(withViewOffset: -120, imageViewOffset: -10, signUpButtonAlpha: 0)
+        if !iscredentialLoginViewShifted {
+            moveUpCredentialLoginView(true)
+        }
     }
     
-    func setView(withViewOffset viewOffset: CGFloat, imageViewOffset: CGFloat, signUpButtonAlpha: CGFloat) {
-        credentialLoginViewTop.constant = viewOffset
-        logoImageViewTop.constant = imageViewOffset
+    func moveUpCredentialLoginView(enable: Bool) {
+        credentialLoginViewTop.constant = enable ? -120 : -20
+        logoImageViewTop.constant = enable ? -10 : 42
         UIView.animateWithDuration(0.25, animations: {
             self.view.layoutIfNeeded()
-            self.signUpButton.alpha = signUpButtonAlpha
+            self.signUpButton.alpha = enable ? 0 : 1
         })
+        iscredentialLoginViewShifted = enable
     }
 }
 
@@ -101,21 +112,20 @@ extension LoginViewController {
 extension LoginViewController {
 
     @IBAction func toggleSocialView(sender: AnyObject) {
-        setSocialLoginViewBottomOffsetBy(isSocialLoginViewHidden)
+        hideSocialLoginViewBy(isSocialLoginViewHidden)
     }
     
-    func setSocialLoginViewBottomOffsetBy(isHidden: Bool) {
+    func hideSocialLoginViewBy(isHidden: Bool) {
         socialLoginViewBottom.constant = isHidden ? 0 : socialView.frame.height - toggleSocialViewButton.frame.height
         
         UIView.animateWithDuration(0.25, animations: {
             self.view.layoutIfNeeded()
         })
-        isSocialLoginViewHidden = !isSocialLoginViewHidden
+        isSocialLoginViewHidden = !isHidden
     }
     
     
     @IBAction func login(sender: AnyObject) {
-        
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             presentAlertViewControllerWithMessage("Empty Email or Password.")
         } else {
@@ -146,16 +156,24 @@ extension LoginViewController {
     }
     
     func setUIEnabled(enabled: Bool) {
+        isViewWating = !enabled
+        
         emailTextField.enabled = enabled
         passwordTextField.enabled = enabled
         loginButton.enabled = enabled
-        loginButton.alpha = enabled ? 1.0 : 0.6
+        
+        let alpha = CGFloat(enabled ? 1.0 : 0.6)
+        UIView.animateWithDuration(0.25, animations: {
+            self.emailTextField.alpha = alpha
+            self.passwordTextField.alpha = alpha
+            self.loginButton.alpha = alpha
+        })
+
         loginButton.setTitle(enabled ? "Login" : nil, forState: .Normal)
         signUpButton.enabled = enabled
         toggleSocialViewButton.enabled = enabled
         facebookButton.enabled = enabled
     }
-    
 }
 
 
