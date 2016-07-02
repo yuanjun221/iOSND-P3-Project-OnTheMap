@@ -31,7 +31,6 @@ class OTMClient : NSObject {
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
-            
             func sendError(errorMessage: String) {
                 print(errorMessage)
                 let error = NSError(domain: "taskForPOSTMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
@@ -53,7 +52,6 @@ class OTMClient : NSObject {
             print(NSString(data: targetData, encoding: NSUTF8StringEncoding))
             
             self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForPOST)
-    
         }
         
         task.resume()
@@ -61,7 +59,6 @@ class OTMClient : NSObject {
     }
     
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
-        
         var parsedResult: AnyObject!
         do {
             parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
@@ -74,7 +71,6 @@ class OTMClient : NSObject {
     }
     
     private func otmURLFromParameters(parameters: [String: AnyObject], withPathExtension: String? = nil) -> NSURL {
-        
         let components = NSURLComponents()
         components.scheme = OTMClient.Constants.ApiScheme
         components.host = OTMClient.Constants.ApiHost

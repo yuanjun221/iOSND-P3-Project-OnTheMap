@@ -18,11 +18,8 @@ class LoginViewController: UIViewController {
     private var isViewWating = false
     
     // MARK: Outlets
-    @IBOutlet weak var udacityImageView: UIImageView!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var backgroundView: UIView!
-    @IBOutlet weak var socialView: UIView!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -116,14 +113,13 @@ extension LoginViewController {
     }
     
     func hideSocialLoginViewBy(isHidden: Bool) {
-        socialLoginViewBottom.constant = isHidden ? 0 : socialView.frame.height - toggleSocialViewButton.frame.height
+        socialLoginViewBottom.constant = isHidden ? 0 : 45
         
         UIView.animateWithDuration(0.25, animations: {
             self.view.layoutIfNeeded()
         })
         isSocialLoginViewHidden = !isHidden
     }
-    
     
     @IBAction func login(sender: AnyObject) {
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {

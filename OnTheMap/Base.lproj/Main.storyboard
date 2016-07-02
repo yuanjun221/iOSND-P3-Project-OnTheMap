@@ -191,7 +191,6 @@
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="z71-Wx-baS" id="MHD-qr-MwI"/>
-                        <outlet property="backgroundView" destination="eIk-7Z-jPT" id="sP0-7k-b0O"/>
                         <outlet property="credentialLoginViewTop" destination="S7a-Xf-Zrp" id="s3W-ca-Zrl"/>
                         <outlet property="emailTextField" destination="DLr-0X-dOi" id="Axd-CM-zwT"/>
                         <outlet property="facebookButton" destination="n9w-sE-Z3h" id="U71-Mf-Ufn"/>
@@ -200,9 +199,7 @@
                         <outlet property="passwordTextField" destination="pPz-7P-Sxn" id="Xib-IA-fUc"/>
                         <outlet property="signUpButton" destination="8IW-Lb-5Wr" id="Z7D-s0-d2q"/>
                         <outlet property="socialLoginViewBottom" destination="ztt-dO-CFs" id="bkT-C3-rmC"/>
-                        <outlet property="socialView" destination="Y12-GK-kde" id="HNX-ED-au8"/>
                         <outlet property="toggleSocialViewButton" destination="nCY-ph-5NY" id="7ZA-cp-CpI"/>
-                        <outlet property="udacityImageView" destination="8My-IE-yqx" id="1K4-Ws-7mf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
