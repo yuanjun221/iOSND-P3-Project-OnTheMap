@@ -21,6 +21,8 @@ struct OTMStudentInformation {
     let uniqueKey: String
     let updatedAt: String
     
+    var countryCode: String?
+    
     // MARK: Initializers
     init(dictionary: [String: AnyObject]) {
         createdAt = dictionary[OTMClient.ResponseKeys.CreatedAt] as! String
@@ -36,13 +38,10 @@ struct OTMStudentInformation {
     }
     
     static func studentsInformationFromResults(results: [[String: AnyObject]]) -> [OTMStudentInformation] {
-        
         var studentsInformation = [OTMStudentInformation]()
-        
         for result in results {
             studentsInformation.append(OTMStudentInformation(dictionary: result))
         }
         return studentsInformation
     }
-    
 }

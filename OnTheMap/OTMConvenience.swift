@@ -11,10 +11,7 @@ import UIKit
 
 extension OTMClient {
     
-    func loginWithCredential(username: String,
-                             password: String,
-            completionHandlerForLogin: (success: Bool, errorString: String?) -> Void) {
-        
+    func loginWithCredential(username: String, password: String, completionHandlerForLogin: (success: Bool, errorString: String?) -> Void) {
         let method: String = Methods.Session
         let parameters: [String: AnyObject] = [
             ParameterKeys.Username: username,
@@ -22,7 +19,6 @@ extension OTMClient {
         let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         
         taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Udacity) { (results, error) in
-            
             if let error = error {
                 print(error)
                 completionHandlerForLogin(success: false, errorString: "Connection timed out.")
@@ -52,11 +48,11 @@ extension OTMClient {
     
     func getStudentsInformation(completionHandlerForStudentsInformation: (result: [OTMStudentInformation]?, error: NSError?) -> Void) {
         let method = Methods.StudentLocation
-        let parameters: [String: AnyObject] = [ParameterKeys.Limit: 100,
-        ParameterKeys.Order: "-" + ResponseKeys.UpdatedAt + "," + "-" + ResponseKeys.CreatedAt]
+        let parameters: [String: AnyObject] = [
+            ParameterKeys.Limit: 100,
+            ParameterKeys.Order: "-" + ResponseKeys.UpdatedAt + "," + "-" + ResponseKeys.CreatedAt]
         
         taskForGETMethod(method, parameters: parameters, host: .Parse) { (results, error) in
-            
             if let error = error {
                 completionHandlerForStudentsInformation(result: nil, error: error)
             } else {
@@ -70,5 +66,24 @@ extension OTMClient {
         }
     }
     
+    func getCountryCode(FromLatitude latitude: Double, longitude: Double, completionHandlerForCountryCode: (result: String?, error: NSError?) -> Void) {
+        let method = Methods.CountryCode
+        let parameters: [String: AnyObject] = [
+            ParameterKeys.Latitude: latitude,
+            ParameterKeys.Longitude: longitude,
+            ParameterKeys.Username: ParameterValues.GeonamesUsername]
+        
+        taskForGETMethod(method, parameters: parameters, host: .Geonames) { (results, error) in
+            if let error = error {
+                completionHandlerForCountryCode(result: nil, error: error)
+            } else {
+                if let results = results as? String {
+                    completionHandlerForCountryCode(result: results, error: nil)
+                } else {
+                    completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getCountryCode"]))
+                }
+            }
+        }
+    }
     
 }

@@ -10,12 +10,15 @@ extension OTMClient {
     
     struct Constants {
         static let ApiScheme = "https"
+        static let ApiSchemeArbitrary = "http"
         
         static let UdacityApiHost = "www.udacity.com"
         static let UdacityApiPath = "/api"
         
         static let ParseApiHost = "api.parse.com"
         static let ParseApiPath = "/1"
+        
+        static let GeonamesApiHost = "api.geonames.org"
     }
     
     struct Methods {
@@ -24,6 +27,9 @@ extension OTMClient {
         
         // MARK: Parse Methods
         static let StudentLocation = "/classes/StudentLocation"
+        
+        // MARK: Geonames Methods
+        static let CountryCode = "/countryCode"
     }
     
     struct ParameterKeys {
@@ -35,6 +41,15 @@ extension OTMClient {
         static let Limit = "limit"
         static let Skip = "skip"
         static let Order = "order"
+        
+        // MARK: Geonames Parameter Keys
+        static let Latitude = "lat"
+        static let Longitude = "lng"
+    }
+    
+    struct ParameterValues {
+        
+        static let GeonamesUsername = "yuanjun221"
     }
     
     struct ResponseKeys {
@@ -64,5 +79,6 @@ extension OTMClient {
     enum HostIdentifier {
         case Udacity
         case Parse
+        case Geonames
     }
 }

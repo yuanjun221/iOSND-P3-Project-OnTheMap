@@ -10,6 +10,7 @@ import Foundation
 
 class OTMClient : NSObject {
     
+    var studentsInfo = [OTMStudentInformation]()
     var session = NSURLSession.sharedSession()
     
     var sessionID: String? = nil
@@ -54,7 +55,7 @@ class OTMClient : NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET)
+            self.convertDataWithCompletionHandler(data, host: host, completionHandlerForConvertData: completionHandlerForGET)
         }
         
         task.resume()
@@ -93,7 +94,7 @@ class OTMClient : NSObject {
             
             print(NSString(data: targetData, encoding: NSUTF8StringEncoding))
             
-            self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForPOST)
+            self.convertDataWithCompletionHandler(targetData, host: host, completionHandlerForConvertData: completionHandlerForPOST)
         }
         
         task.resume()
@@ -101,14 +102,25 @@ class OTMClient : NSObject {
     }
     
     private func convertDataWithCompletionHandler(data: NSData,
+                                                  host: HostIdentifier,
                        completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
         var parsedResult: AnyObject!
-        do {
-            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-        } catch {
-            let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            let error = NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo)
-            completionHandlerForConvertData(result: nil, error: error)
+        
+        switch host {
+        case .Geonames:
+            guard let textString = NSString(data: data, encoding: NSUTF8StringEncoding) else {
+                completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: [NSLocalizedDescriptionKey : "Could not parse the data as TEXT: '\(data)'"]))
+                return
+            }
+            parsedResult = textString.substringToIndex(textString.length - 2) as String
+
+        default:
+            do {
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            } catch {
+                completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]))
+            }
+            
         }
         completionHandlerForConvertData(result: parsedResult, error: nil)
     }
@@ -117,15 +129,20 @@ class OTMClient : NSObject {
                                         withHost: HostIdentifier,
                                    pathExtension: String? = nil) -> NSURL {
         let components = NSURLComponents()
-        components.scheme = OTMClient.Constants.ApiScheme
         
         switch withHost {
         case .Udacity:
-            components.host = OTMClient.Constants.UdacityApiHost
-            components.path = OTMClient.Constants.UdacityApiPath + (pathExtension ?? "")
+            components.scheme = Constants.ApiScheme
+            components.host = Constants.UdacityApiHost
+            components.path = Constants.UdacityApiPath + (pathExtension ?? "")
         case .Parse:
-            components.host = OTMClient.Constants.ParseApiHost
-            components.path = OTMClient.Constants.ParseApiPath + (pathExtension ?? "")
+            components.scheme = Constants.ApiScheme
+            components.host = Constants.ParseApiHost
+            components.path = Constants.ParseApiPath + (pathExtension ?? "")
+        case .Geonames:
+            components.scheme = Constants.ApiSchemeArbitrary
+            components.host = Constants.GeonamesApiHost
+            components.path = pathExtension ?? ""
         }
     
         components.queryItems = [NSURLQueryItem]()
