@@ -19,10 +19,8 @@ class OTMClient : NSObject {
         super.init()
     }
     
-    func taskForGETMethod(method: String,
-                      parameters: [String: AnyObject],
-                            host: HostIdentifier,
-         completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func taskForGETMethod(method: String, parameters: [String: AnyObject], host: HostIdentifier, completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
         
         switch host {
@@ -55,18 +53,15 @@ class OTMClient : NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data, host: host, completionHandlerForConvertData: completionHandlerForGET)
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET)
         }
         
         task.resume()
         return task
     }
     
-    func taskForPOSTMethod(method: String,
-                       parameters: [String: AnyObject],
-                         jsonBody: String,
-                             host: HostIdentifier,
-         completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func taskForPOSTMethod(method: String, parameters: [String: AnyObject], jsonBody: String, host: HostIdentifier, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -94,55 +89,38 @@ class OTMClient : NSObject {
             
             print(NSString(data: targetData, encoding: NSUTF8StringEncoding))
             
-            self.convertDataWithCompletionHandler(targetData, host: host, completionHandlerForConvertData: completionHandlerForPOST)
+            self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForPOST)
         }
         
         task.resume()
         return task
     }
     
-    private func convertDataWithCompletionHandler(data: NSData,
-                                                  host: HostIdentifier,
-                       completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
-        var parsedResult: AnyObject!
+    private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
         
-        switch host {
-        case .Geonames:
-            guard let textString = NSString(data: data, encoding: NSUTF8StringEncoding) else {
-                completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: [NSLocalizedDescriptionKey : "Could not parse the data as TEXT: '\(data)'"]))
-                return
-            }
-            parsedResult = textString.substringToIndex(textString.length - 2) as String
-
-        default:
-            do {
-                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-            } catch {
-                completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]))
-            }
-            
+        var parsedResult: AnyObject!
+        do {
+            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+        } catch {
+            completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]))
         }
         completionHandlerForConvertData(result: parsedResult, error: nil)
     }
     
-    private func otmURLFromParameters(parameters: [String: AnyObject],
-                                        withHost: HostIdentifier,
-                                   pathExtension: String? = nil) -> NSURL {
-        let components = NSURLComponents()
+    private func otmURLFromParameters(parameters: [String: AnyObject], withHost: HostIdentifier, pathExtension: String? = nil) -> NSURL {
         
+        let components = NSURLComponents()
+        components.scheme = Constants.ApiScheme
         switch withHost {
         case .Udacity:
-            components.scheme = Constants.ApiScheme
             components.host = Constants.UdacityApiHost
             components.path = Constants.UdacityApiPath + (pathExtension ?? "")
         case .Parse:
-            components.scheme = Constants.ApiScheme
             components.host = Constants.ParseApiHost
             components.path = Constants.ParseApiPath + (pathExtension ?? "")
-        case .Geonames:
-            components.scheme = Constants.ApiSchemeArbitrary
-            components.host = Constants.GeonamesApiHost
-            components.path = pathExtension ?? ""
+        case .Google:
+            components.host = Constants.GoogleMapsApiHost
+            components.path = Constants.GoogleMapsApiPath + (pathExtension ?? "")
         }
     
         components.queryItems = [NSURLQueryItem]()

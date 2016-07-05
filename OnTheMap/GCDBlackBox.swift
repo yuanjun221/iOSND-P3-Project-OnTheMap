@@ -8,6 +8,10 @@
 
 import Foundation
 
+var GlobalMainQueue: dispatch_queue_t {
+    return dispatch_get_main_queue()
+}
+
 func performUIUpdatesOnMain(updates: () -> Void) {
     dispatch_async(dispatch_get_main_queue()) {
         updates()

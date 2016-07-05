@@ -10,11 +10,13 @@ import UIKit
 
 class OTMTableViewController: UIViewController {
     
+    var studentsInfo: [OTMStudentInformation] {
+        return OTMClient.sharedInstance().studentsInfo
+    }
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
-
 }
 
 
@@ -38,15 +40,29 @@ extension OTMTableViewController {
 extension OTMTableViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return OTMClient.sharedInstance().studentsInfo.count
+        return studentsInfo.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let studentInfo = OTMClient.sharedInstance().studentsInfo[indexPath.row]
+        let studentInfo = studentsInfo[indexPath.row]
         
         let cell = tableView.dequeueReusableCellWithIdentifier("tableCell") as! OTMTableViewCell
+        
         if let countryCode = studentInfo.countryCode {
             cell.flagView.image = UIImage(named: countryCode)
+        } else {
+            OTMClient.sharedInstance().getCountryCodeFromStudentInfo(studentInfo) { (countryCode, error) in
+                if let error = error {
+                    print(error)
+                } else {
+                    if let countryCode = countryCode {
+                        performUIUpdatesOnMain {
+                            OTMClient.sharedInstance().studentsInfo[indexPath.row].countryCode = countryCode
+                            cell.flagView.image = UIImage(named: countryCode)
+                        }
+                    }
+                }
+            }
         }
         cell.nameLabel.text = "\(studentInfo.firstName) \(studentInfo.lastName)"
         cell.urlLabel.text = studentInfo.mediaURL
@@ -61,24 +77,21 @@ extension OTMTableViewController {
     
     func getStudentsInformation() {
         
-        performUIUpdatesOnMain {
-            self.setViewWaiting(true)
-        }
-        
+        self.setViewWaiting(true)
         OTMClient.sharedInstance().getStudentsInformation { (studentsInfo, error) in
             if let studentsInfo = studentsInfo {
-                
                 OTMClient.sharedInstance().studentsInfo = studentsInfo
-                
                 performUIUpdatesOnMain {
-                    self.tableView.reloadData()
                     self.setViewWaiting(false)
+                    self.tableView.reloadData()
                 }
-                
+
             } else {
                 print(error)
-                self.setViewWaiting(false)
-                presentAlertControllerWithTitle("Fetching Data Failed.", message: nil, FromHostViewController: self)
+                performUIUpdatesOnMain {
+                    self.setViewWaiting(false)
+                    presentAlertControllerWithTitle("Fetching Data Failed.", message: nil, FromHostViewController: self)
+                }
             }
         }
     }
@@ -91,4 +104,5 @@ extension OTMTableViewController {
         })
         indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
     }
+    
 }

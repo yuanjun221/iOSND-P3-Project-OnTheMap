@@ -10,7 +10,6 @@ extension OTMClient {
     
     struct Constants {
         static let ApiScheme = "https"
-        static let ApiSchemeArbitrary = "http"
         
         static let UdacityApiHost = "www.udacity.com"
         static let UdacityApiPath = "/api"
@@ -18,7 +17,8 @@ extension OTMClient {
         static let ParseApiHost = "api.parse.com"
         static let ParseApiPath = "/1"
         
-        static let GeonamesApiHost = "api.geonames.org"
+        static let GoogleMapsApiHost = "maps.googleapis.com"
+        static let GoogleMapsApiPath = "/maps/api"
     }
     
     struct Methods {
@@ -28,8 +28,8 @@ extension OTMClient {
         // MARK: Parse Methods
         static let StudentLocation = "/classes/StudentLocation"
         
-        // MARK: Geonames Methods
-        static let CountryCode = "/countryCode"
+        // MARK: Google Maps Methods
+        static let GeoCode = "/geocode/json"
     }
     
     struct ParameterKeys {
@@ -42,17 +42,25 @@ extension OTMClient {
         static let Skip = "skip"
         static let Order = "order"
         
-        // MARK: Geonames Parameter Keys
-        static let Latitude = "lat"
-        static let Longitude = "lng"
+        // MARK: Google Maps GeoCode Parameter Keys
+        static let Latlng = "latlng"
+        static let Key = "key"
+        static let ResultType = "result_type"
+        static let Language = "language"
     }
     
     struct ParameterValues {
+        // MARK: Parse Parameter Values
+        static var Limit = "10"
         
-        static let GeonamesUsername = "yuanjun221"
+        // MARK: Google Maps GeoCode Parameter Values
+        static let Key = "AIzaSyBNUI5NM4Nv8Ejqit5rZRwP48nWqCDipvg"
+        static let Country = "country"
+        static let English = "EN"
     }
     
     struct ResponseKeys {
+        // MARK: Udacity Response Keys
         static let Account = "account"
         static let Session = "session"
         static let ID = "id"
@@ -71,6 +79,13 @@ extension OTMClient {
         static let UniqueKey = "uniqueKey"
         static let UpdatedAt = "updatedAt"
         static let StudentResults = "results"
+        
+        // MARK: Google Maps Response Keys
+        static let ErrorMessage = "error_message"
+        static let GeoCodeStatus = "status"
+        static let GeoCodeResults = "results"
+        static let AddressComponents = "address_components"
+        static let ShortName = "short_name"
     }
 }
 
@@ -79,6 +94,6 @@ extension OTMClient {
     enum HostIdentifier {
         case Udacity
         case Parse
-        case Geonames
+        case Google
     }
 }

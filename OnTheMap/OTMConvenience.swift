@@ -49,7 +49,7 @@ extension OTMClient {
     func getStudentsInformation(completionHandlerForStudentsInformation: (result: [OTMStudentInformation]?, error: NSError?) -> Void) {
         let method = Methods.StudentLocation
         let parameters: [String: AnyObject] = [
-            ParameterKeys.Limit: 100,
+            ParameterKeys.Limit: ParameterValues.Limit,
             ParameterKeys.Order: "-" + ResponseKeys.UpdatedAt + "," + "-" + ResponseKeys.CreatedAt]
         
         taskForGETMethod(method, parameters: parameters, host: .Parse) { (results, error) in
@@ -66,21 +66,57 @@ extension OTMClient {
         }
     }
     
-    func getCountryCode(FromLatitude latitude: Double, longitude: Double, completionHandlerForCountryCode: (result: String?, error: NSError?) -> Void) {
-        let method = Methods.CountryCode
-        let parameters: [String: AnyObject] = [
-            ParameterKeys.Latitude: latitude,
-            ParameterKeys.Longitude: longitude,
-            ParameterKeys.Username: ParameterValues.GeonamesUsername]
+    func getCountryCodeFromStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForCountryCode: (result: String?, error: NSError?) -> Void) {
         
-        taskForGETMethod(method, parameters: parameters, host: .Geonames) { (results, error) in
-            if let error = error {
-                completionHandlerForCountryCode(result: nil, error: error)
-            } else {
-                if let results = results as? String {
-                    completionHandlerForCountryCode(result: results, error: nil)
+        let method = Methods.GeoCode
+        let parameters: [String: AnyObject] = [
+            ParameterKeys.Key: ParameterValues.Key,
+            ParameterKeys.Latlng: "\(studentInfo.latitude),\(studentInfo.longitude)",
+            ParameterKeys.ResultType: ParameterValues.Country,
+            ParameterKeys.Language: ParameterValues.English
+        ]
+        
+        if studentInfo.latitude < -90 || studentInfo.latitude > 90 || studentInfo.longitude < -180 || studentInfo.longitude > 180 {
+            completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Parameters out of range (lat: -90 to 90, log: -180 to 180)"]))
+        } else {
+            taskForGETMethod(method, parameters: parameters, host: .Google) { (results, error) in
+                if let error = error {
+                    completionHandlerForCountryCode(result: nil, error: error)
                 } else {
-                    completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getCountryCode"]))
+                    guard let stauts = results[ResponseKeys.StatusCode] as? String else {
+                        completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getCountryCode"]))
+                        return
+                    }
+                    
+                    if stauts == "OK" {
+                        guard let geoCodeResults = results[ResponseKeys.GeoCodeResults] as? [[String: AnyObject]] else {
+                            completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse 'geoCodeResults' in \(results)"]))
+                            return
+                        }
+                        
+                        let targetGeoCodeResult = geoCodeResults[0]
+                        
+                        guard let addressComponents = targetGeoCodeResult[ResponseKeys.AddressComponents] as? [[String: AnyObject]] else {
+                            completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse 'addressComponents' in \(targetGeoCodeResult)"]))
+                            return
+                        }
+                        
+                        let targetAddressComponent = addressComponents[0]
+                        
+                        guard let shortName = targetAddressComponent[ResponseKeys.ShortName] as? String else {
+                            completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse 'shortName' in \(targetAddressComponent)"]))
+                            return
+                        }
+                        
+                        completionHandlerForCountryCode(result: shortName, error: nil)
+                        
+                    } else {
+                        guard let errorMessage = results[ResponseKeys.ErrorMessage] as? String else {
+                            completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Server returned an error but could not parse 'errorMessage' in \(results)"]))
+                            return
+                        }
+                        completionHandlerForCountryCode(result: nil, error: NSError(domain: "getCountryCode parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Server returned an error: \(errorMessage)"]))
+                    }
                 }
             }
         }

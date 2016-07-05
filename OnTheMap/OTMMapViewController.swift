@@ -95,13 +95,12 @@ extension OTMMapViewController {
     
     func getStudentsInformation() {
         
-        performUIUpdatesOnMain {
-            if !self.mapView.annotations.isEmpty {
-                self.mapView.removeAnnotations(self.mapView.annotations)
-            }
-            self.setViewWaiting(true)
+
+        if !mapView.annotations.isEmpty {
+            mapView.removeAnnotations(self.mapView.annotations)
         }
-        
+        setViewWaiting(true)
+
         OTMClient.sharedInstance().getStudentsInformation { (studentsInfo, error) in
             if let studentsInfo = studentsInfo {
                 OTMClient.sharedInstance().studentsInfo = studentsInfo
@@ -133,8 +132,11 @@ extension OTMMapViewController {
                 }
             } else {
                 print(error)
-                self.setViewWaiting(false)
-                presentAlertControllerWithTitle("Fetching Data Failed.", message: nil, FromHostViewController: self)
+                performUIUpdatesOnMain {
+                    self.setViewWaiting(false)
+                    presentAlertControllerWithTitle("Fetching Data Failed.", message: nil, FromHostViewController: self)
+                }
+
             }
         }
     }

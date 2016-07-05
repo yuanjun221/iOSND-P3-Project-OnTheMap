@@ -6,6 +6,9 @@
 //  Copyright © 2016年 Jun.Yuan. All rights reserved.
 //
 
+import Foundation
+
+
 // MARK: - OTMStudentInformation
 struct OTMStudentInformation {
     
@@ -35,13 +38,16 @@ struct OTMStudentInformation {
         objectID = dictionary[OTMClient.ResponseKeys.ObjectId] as! String
         uniqueKey = dictionary[OTMClient.ResponseKeys.UniqueKey] as! String
         updatedAt = dictionary[OTMClient.ResponseKeys.UpdatedAt] as! String
+
     }
     
     static func studentsInformationFromResults(results: [[String: AnyObject]]) -> [OTMStudentInformation] {
         var studentsInformation = [OTMStudentInformation]()
+        
         for result in results {
             studentsInformation.append(OTMStudentInformation(dictionary: result))
         }
         return studentsInformation
     }
+
 }
