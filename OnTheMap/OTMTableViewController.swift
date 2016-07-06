@@ -48,51 +48,104 @@ extension OTMTableViewController: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("tableCell") as! OTMTableViewCell
         
-        if let countryCode = studentInfo.countryCode {
-            cell.flagView.image = UIImage(named: countryCode)
-        } else {
-            OTMClient.sharedInstance().getCountryCodeFromStudentInfo(studentInfo) { (countryCode, error) in
-                if let error = error {
-                    print(error)
-                } else {
-                    if let countryCode = countryCode {
-                        performUIUpdatesOnMain {
-                            OTMClient.sharedInstance().studentsInfo[indexPath.row].countryCode = countryCode
-                            cell.flagView.image = UIImage(named: countryCode)
-                        }
-                    }
-                }
-            }
-        }
         cell.nameLabel.text = "\(studentInfo.firstName) \(studentInfo.lastName)"
         cell.urlLabel.text = studentInfo.mediaURL
         cell.dateLabel.text = (studentInfo.updatedAt as NSString).substringToIndex(10)
         
+
+        // Apple's CLGecoder cannot accept geocoding request more than one per minute.
+        // Using google maps gecoding API instead to generate a country code.
+        
+        OTMClient.sharedInstance().getUserImageUrlFromStudentInfo(studentInfo) { (url, error) in
+            let errorDomain = "Error occurred when getting user image url: "
+            guard error == nil else {
+                print(errorDomain + error!.localizedDescription)
+                return
+            }
+            
+            guard let url = url else {
+                print(errorDomain + "No url returned.")
+                return
+            }
+            
+            OTMClient.sharedInstance().taskForGETImageData(url) { (data, error) in
+                let errorDomain = "Error occurred when getting user image data: "
+                guard error == nil else {
+                    print(errorDomain + error!.localizedDescription)
+                    return
+                }
+                
+                guard let data = data else {
+                    print(errorDomain + "No image data returned.")
+                    return
+                }
+                
+                guard let image = UIImage(data: data) else {
+                    print(errorDomain + "No image from image data.")
+                    return
+                }
+                
+                performUIUpdatesOnMain {
+                    cell.avatarImageView.image = image
+                }
+            }
+        }
+        
+        guard let countryCode = studentInfo.countryCode else {
+            OTMClient.sharedInstance().getCountryCodeFromStudentInfo(studentInfo) { (countryCode, error) in
+                let errorDomain = "Error occurred when getting country code: "
+                guard error == nil else {
+                    print(errorDomain + error!.localizedDescription)
+                    return
+                }
+                
+                guard let countryCode = countryCode else {
+                    print(errorDomain + "No country code returned.")
+                    return
+                }
+                
+                performUIUpdatesOnMain {
+                    OTMClient.sharedInstance().studentsInfo[indexPath.row].countryCode = countryCode
+                    cell.flagView.image = UIImage(named: countryCode)
+                }
+            }
+            return cell
+        }
+        
+        cell.flagView.image = UIImage(named: countryCode)
         return cell
     }
+    
 }
 
 
 extension OTMTableViewController {
     
     func getStudentsInformation() {
-        
         self.setViewWaiting(true)
         OTMClient.sharedInstance().getStudentsInformation { (studentsInfo, error) in
-            if let studentsInfo = studentsInfo {
-                OTMClient.sharedInstance().studentsInfo = studentsInfo
+            let errorDomain = "Error occurred when getting students information: "
+            
+            guard error == nil else {
+                print(errorDomain + error!.localizedDescription)
                 performUIUpdatesOnMain {
                     self.setViewWaiting(false)
-                    self.tableView.reloadData()
+                    presentAlertControllerWithTitle("Fetching Data Failed", message: "Error occurred when getting students information.", FromHostViewController: self)
                 }
-
-            } else {
-                print(error)
-                performUIUpdatesOnMain {
-                    self.setViewWaiting(false)
-                    presentAlertControllerWithTitle("Fetching Data Failed.", message: nil, FromHostViewController: self)
-                }
+                return
             }
+            
+            guard let studentsInfo = studentsInfo else {
+                print(errorDomain + "No students information returned.")
+                return
+            }
+            
+            OTMClient.sharedInstance().studentsInfo = studentsInfo
+            performUIUpdatesOnMain {
+                self.setViewWaiting(false)
+                self.tableView.reloadData()
+            }
+            
         }
     }
     

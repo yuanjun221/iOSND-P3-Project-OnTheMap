@@ -127,16 +127,23 @@ extension OTMLoginViewController {
         } else {
             setUIEnabled(false)
             
-            OTMClient.sharedInstance().loginWithCredential(emailTextField.text!, password: passwordTextField.text!) { (success, errorString) in
+            OTMClient.sharedInstance().loginWithCredential(emailTextField.text!, password: passwordTextField.text!) { (success, error, errorMessage) in
                 performUIUpdatesOnMain {
                     self.setUIEnabled(true)
                 }
                 
                 if success {
-                    let tabBarController = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-                    self.presentViewController(tabBarController, animated: true, completion: nil)
+                    performUIUpdatesOnMain {
+                        let tabBarController = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
+                        self.presentViewController(tabBarController, animated: true, completion: nil)
+                    }
+
                 } else {
-                    presentAlertControllerWithTitle("Login Failed", message: errorString!, FromHostViewController: self)
+                    print(error!.localizedDescription)
+                    performUIUpdatesOnMain {
+                        presentAlertControllerWithTitle("Login Failed", message: errorMessage!, FromHostViewController: self)
+                    }
+                    
                 }
             }
         }

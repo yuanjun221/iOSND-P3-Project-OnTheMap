@@ -13,7 +13,8 @@ class OTMClient : NSObject {
     var studentsInfo = [OTMStudentInformation]()
     var session = NSURLSession.sharedSession()
     
-    var sessionID: String? = nil
+    var userAccountKey: String? = nil
+    // var sessionID: String? = nil
     
     override init() {
         super.init()
@@ -33,7 +34,6 @@ class OTMClient : NSObject {
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             func sendError(errorMessage: String) {
-                print(errorMessage)
                 let error = NSError(domain: "taskForGETMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
                 completionHandlerForGET(result: nil, error: error)
             }
@@ -53,7 +53,16 @@ class OTMClient : NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET)
+            var targetData = data
+            
+            switch host {
+            case .Udacity:
+                targetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            default:
+                break
+            }
+            
+            self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForGET)
         }
         
         task.resume()
@@ -70,7 +79,6 @@ class OTMClient : NSObject {
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             func sendError(errorMessage: String) {
-                print(errorMessage)
                 let error = NSError(domain: "taskForPOSTMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
                 completionHandlerForPOST(result: nil, error: error)
             }
@@ -87,8 +95,6 @@ class OTMClient : NSObject {
             
             let targetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
             
-            print(NSString(data: targetData, encoding: NSUTF8StringEncoding))
-            
             self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForPOST)
         }
         
@@ -96,8 +102,38 @@ class OTMClient : NSObject {
         return task
     }
     
-    private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
+    func taskForGETImageData(url: NSURL, completionHandlerForGETImageData: (imageData: NSData?, error: NSError?) -> Void) -> NSURLSessionTask {
+        let request = NSURLRequest(URL: url)
         
+        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            func sendError(error: String) {
+                completionHandlerForGETImageData(imageData: nil, error: NSError(domain: "taskForGETImageData", code: 1, userInfo: [NSLocalizedDescriptionKey : error]))
+            }
+            
+            guard (error == nil) else {
+                sendError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                sendError("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            guard let data = data else {
+                sendError("No data was returned by the request!")
+                return
+            }
+            
+            completionHandlerForGETImageData(imageData: data, error: nil)
+        }
+        
+        task.resume()
+        return task
+    }
+    
+    
+    private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
         var parsedResult: AnyObject!
         do {
             parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
@@ -107,7 +143,7 @@ class OTMClient : NSObject {
         completionHandlerForConvertData(result: parsedResult, error: nil)
     }
     
-    private func otmURLFromParameters(parameters: [String: AnyObject], withHost: HostIdentifier, pathExtension: String? = nil) -> NSURL {
+    func otmURLFromParameters(parameters: [String: AnyObject], withHost: HostIdentifier, pathExtension: String? = nil) -> NSURL {
         
         let components = NSURLComponents()
         components.scheme = Constants.ApiScheme
@@ -121,6 +157,9 @@ class OTMClient : NSObject {
         case .Google:
             components.host = Constants.GoogleMapsApiHost
             components.path = Constants.GoogleMapsApiPath + (pathExtension ?? "")
+        case .Robohash:
+            components.host = Constants.RobohashApiHost
+            components.path = pathExtension ?? ""
         }
     
         components.queryItems = [NSURLQueryItem]()
@@ -130,6 +169,14 @@ class OTMClient : NSObject {
             components.queryItems!.append(queryItem)
         }
         return components.URL!
+    }
+    
+    func subtituteKeyInMethod(method: String, key: String, value: String) -> String? {
+        if method.rangeOfString("\(key)") != nil {
+            return method.stringByReplacingOccurrencesOfString("\(key)", withString: value)
+        } else {
+            return nil
+        }
     }
     
     class func sharedInstance() -> OTMClient {

@@ -19,17 +19,24 @@ extension OTMClient {
         
         static let GoogleMapsApiHost = "maps.googleapis.com"
         static let GoogleMapsApiPath = "/maps/api"
+        
+        static let RobohashApiHost = "robohash.org"
     }
     
     struct Methods {
         // MARK: Udacity Methods
         static let Session = "/session"
+        static let UserId = "/users/user_id"
         
         // MARK: Parse Methods
         static let StudentLocation = "/classes/StudentLocation"
         
         // MARK: Google Maps Methods
         static let GeoCode = "/geocode/json"
+    }
+    
+    struct URLKeys {
+        static let UserId = "user_id"
     }
     
     struct ParameterKeys {
@@ -47,6 +54,9 @@ extension OTMClient {
         static let Key = "key"
         static let ResultType = "result_type"
         static let Language = "language"
+        
+        // MARK: Robohash Parameter Keys
+        static let Size = "size"
     }
     
     struct ParameterValues {
@@ -57,15 +67,23 @@ extension OTMClient {
         static let Key = "AIzaSyBNUI5NM4Nv8Ejqit5rZRwP48nWqCDipvg"
         static let Country = "country"
         static let English = "EN"
+        
+        // MARK: Robohash Parameter Values
+        static let Size100 = "100x100"
+        // static let Size150 = "150x150"
     }
     
     struct ResponseKeys {
         // MARK: Udacity Response Keys
         static let Account = "account"
         static let Session = "session"
+        static let Key = "key"
         static let ID = "id"
         static let StatusCode = "status"
         static let Error = "error"
+        
+        static let User = "user"
+        static let ImageUrl = "_image_url"
         
         // MARK: Parse Student Information
         static let CreatedAt = "createdAt"
@@ -95,5 +113,6 @@ extension OTMClient {
         case Udacity
         case Parse
         case Google
+        case Robohash
     }
 }

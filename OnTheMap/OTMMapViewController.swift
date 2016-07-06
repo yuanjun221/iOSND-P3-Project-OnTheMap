@@ -94,49 +94,52 @@ extension OTMMapViewController: MKMapViewDelegate {
 extension OTMMapViewController {
     
     func getStudentsInformation() {
-        
-
         if !mapView.annotations.isEmpty {
             mapView.removeAnnotations(self.mapView.annotations)
         }
         setViewWaiting(true)
 
         OTMClient.sharedInstance().getStudentsInformation { (studentsInfo, error) in
-            if let studentsInfo = studentsInfo {
-                OTMClient.sharedInstance().studentsInfo = studentsInfo
-                
-                var annotations = [MKPointAnnotation]()
-                
-                for info in studentsInfo {
-                    
-                    let latitude = CLLocationDegrees(info.latitude)
-                    let longitude = CLLocationDegrees(info.longitude)
-                    
-                    let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                    
-                    let firstName = info.firstName
-                    let lastName = info.lastName
-                    let mediaURL = info.mediaURL
-                    
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coordinate
-                    annotation.title = "\(firstName) \(lastName)"
-                    annotation.subtitle = mediaURL
-                    
-                    annotations.append(annotation)
-                }
-                
-                performUIUpdatesOnMain {
-                    self.mapView.addAnnotations(annotations)
-                    self.setViewWaiting(false)
-                }
-            } else {
-                print(error)
+            let errorDomain = "Error occurred when getting students Information: "
+            guard error == nil else {
+                print(errorDomain +  error!.localizedDescription)
                 performUIUpdatesOnMain {
                     self.setViewWaiting(false)
-                    presentAlertControllerWithTitle("Fetching Data Failed.", message: nil, FromHostViewController: self)
+                    presentAlertControllerWithTitle("Fetching Data Failed", message: "Error occurred when getting students Information", FromHostViewController: self)
                 }
-
+                return
+            }
+            
+            guard let studentsInfo = studentsInfo else {
+                print(errorDomain + "No students information returned.")
+                return
+            }
+            
+            OTMClient.sharedInstance().studentsInfo = studentsInfo
+            
+            var annotations = [MKPointAnnotation]()
+            
+            for info in studentsInfo {
+                let latitude = CLLocationDegrees(info.latitude)
+                let longitude = CLLocationDegrees(info.longitude)
+                
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                
+                let firstName = info.firstName
+                let lastName = info.lastName
+                let mediaURL = info.mediaURL
+                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinate
+                annotation.title = "\(firstName) \(lastName)"
+                annotation.subtitle = mediaURL
+                
+                annotations.append(annotation)
+            }
+            
+            performUIUpdatesOnMain {
+                self.mapView.addAnnotations(annotations)
+                self.setViewWaiting(false)
             }
         }
     }
