@@ -13,6 +13,10 @@ import MapKit
 // MARK: - View Controller Properties
 class OTMMapViewController: UIViewController {
     
+    var studentsInfo: [OTMStudentInformation] {
+        return OTMClient.sharedInstance().studentsInfo
+    }
+    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
@@ -25,7 +29,9 @@ extension OTMMapViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getStudentsInformation()
+        if studentsInfo.isEmpty {
+            getStudentsInformation()
+        }
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {

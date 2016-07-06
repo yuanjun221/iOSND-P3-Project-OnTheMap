@@ -24,6 +24,10 @@ extension OTMTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
+        
+        if studentsInfo.isEmpty {
+            getStudentsInformation()
+        }
     }
     
 }
@@ -51,47 +55,53 @@ extension OTMTableViewController: UITableViewDataSource {
         cell.nameLabel.text = "\(studentInfo.firstName) \(studentInfo.lastName)"
         cell.urlLabel.text = studentInfo.mediaURL
         cell.dateLabel.text = (studentInfo.updatedAt as NSString).substringToIndex(10)
+        cell.avatarImageView.image = UIImage(named: "DefaultAvatar")
+        cell.flagImageView.image = UIImage(named: "Unkown")
         
-
-        // Apple's CLGecoder cannot accept geocoding request more than one per minute.
-        // Using google maps gecoding API instead to generate a country code.
-        
-        OTMClient.sharedInstance().getUserImageUrlFromStudentInfo(studentInfo) { (url, error) in
-            let errorDomain = "Error occurred when getting user image url: "
-            guard error == nil else {
-                print(errorDomain + error!.localizedDescription)
-                return
-            }
-            
-            guard let url = url else {
-                print(errorDomain + "No url returned.")
-                return
-            }
-            
-            OTMClient.sharedInstance().taskForGETImageData(url) { (data, error) in
-                let errorDomain = "Error occurred when getting user image data: "
+        if let avatarImage = studentInfo.avatarImage {
+            cell.avatarImageView.image = avatarImage
+        } else {
+            OTMClient.sharedInstance().getUserImageUrlFromStudentInfo(studentInfo) { (url, error) in
+                let errorDomain = "Error occurred when getting user image url: "
                 guard error == nil else {
                     print(errorDomain + error!.localizedDescription)
                     return
                 }
                 
-                guard let data = data else {
-                    print(errorDomain + "No image data returned.")
+                guard let url = url else {
+                    print(errorDomain + "No url returned.")
                     return
                 }
                 
-                guard let image = UIImage(data: data) else {
-                    print(errorDomain + "No image from image data.")
-                    return
-                }
-                
-                performUIUpdatesOnMain {
-                    cell.avatarImageView.image = image
+                OTMClient.sharedInstance().taskForGETImageData(url) { (data, error) in
+                    let errorDomain = "Error occurred when getting user image data: "
+                    guard error == nil else {
+                        print(errorDomain + error!.localizedDescription)
+                        return
+                    }
+                    
+                    guard let data = data else {
+                        print(errorDomain + "No image data returned.")
+                        return
+                    }
+                    
+                    guard let image = UIImage(data: data) else {
+                        print(errorDomain + "No image from image data.")
+                        return
+                    }
+                    
+                    performUIUpdatesOnMain {
+                        cell.avatarImageView.image = image
+                    }
+                    
+                    OTMClient.sharedInstance().studentsInfo[indexPath.row].avatarImage = image
                 }
             }
         }
         
-        guard let countryCode = studentInfo.countryCode else {
+        if let countryCode = studentInfo.countryCode {
+            cell.flagImageView.image = UIImage(named: countryCode)
+        } else {
             OTMClient.sharedInstance().getCountryCodeFromStudentInfo(studentInfo) { (countryCode, error) in
                 let errorDomain = "Error occurred when getting country code: "
                 guard error == nil else {
@@ -105,14 +115,13 @@ extension OTMTableViewController: UITableViewDataSource {
                 }
                 
                 performUIUpdatesOnMain {
-                    OTMClient.sharedInstance().studentsInfo[indexPath.row].countryCode = countryCode
-                    cell.flagView.image = UIImage(named: countryCode)
+                    cell.flagImageView.image = UIImage(named: countryCode)
                 }
+                
+                OTMClient.sharedInstance().studentsInfo[indexPath.row].countryCode = countryCode
             }
-            return cell
         }
         
-        cell.flagView.image = UIImage(named: countryCode)
         return cell
     }
     

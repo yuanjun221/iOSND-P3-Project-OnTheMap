@@ -11,7 +11,7 @@ import UIKit
 class OTMTableViewCell: UITableViewCell {
 
     @IBOutlet weak var avatarImageView: UIImageView!
-    @IBOutlet weak var flagView: UIImageView!
+    @IBOutlet weak var flagImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var urlLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!

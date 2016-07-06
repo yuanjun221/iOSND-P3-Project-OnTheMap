@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 // MARK: - OTMStudentInformation
 struct OTMStudentInformation {
@@ -25,6 +25,7 @@ struct OTMStudentInformation {
     let updatedAt: String
     
     var countryCode: String?
+    var avatarImage: UIImage?
     
     // MARK: Initializers
     init(dictionary: [String: AnyObject]) {

@@ -96,10 +96,10 @@ extension OTMLoginViewController {
     func moveUpCredentialLoginView(enable: Bool) {
         credentialLoginViewTop.constant = enable ? -120 : -20
         logoImageViewTop.constant = enable ? -10 : 42
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animateWithDuration(0.25) {
             self.view.layoutIfNeeded()
             self.signUpButton.alpha = enable ? 0 : 1
-        })
+        }
         iscredentialLoginViewShifted = enable
     }
 }
@@ -115,9 +115,9 @@ extension OTMLoginViewController {
     func hideSocialLoginViewBy(isHidden: Bool) {
         socialLoginViewBottom.constant = isHidden ? 0 : 45
         
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animateWithDuration(0.25) {
             self.view.layoutIfNeeded()
-        })
+        }
         isSocialLoginViewHidden = !isHidden
     }
     
@@ -157,12 +157,11 @@ extension OTMLoginViewController {
         loginButton.enabled = enabled
         
         let alpha = CGFloat(enabled ? 1.0 : 0.6)
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animateWithDuration(0.25) {
             self.emailTextField.alpha = alpha
             self.passwordTextField.alpha = alpha
             self.loginButton.alpha = alpha
-        })
-
+        }
         loginButton.setTitle(enabled ? "Login" : nil, forState: .Normal)
         signUpButton.enabled = enabled
         toggleSocialViewButton.enabled = enabled
