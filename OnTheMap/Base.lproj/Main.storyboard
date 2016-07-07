@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BZR-Ug-DOh">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -324,62 +324,50 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ipL-je-cPq">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Yxp-KU-D7Q" appends="YES" id="edi-Kh-cBM"/>
+                                </connections>
                             </mapView>
-                            <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1mr-v9-K0O" userLabel="Url Input View">
-                                <rect key="frame" x="0.0" y="536" width="600" height="64"/>
-                                <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.90000000000000002" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Your Link Here" textAlignment="center" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="XOw-oG-ujd" userLabel="Url Text Field">
-                                        <rect key="frame" x="8" y="13" width="506" height="38"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="38" id="h3v-4A-vsp"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
-                                    </textField>
-                                    <button opaque="NO" alpha="0.90000000000000002" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cK9-bf-7Bb">
-                                        <rect key="frame" x="522" y="13" width="70" height="38"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="70" id="J0p-MD-fVc"/>
-                                            <constraint firstAttribute="height" constant="38" id="Ubb-rb-nYI"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                        <state key="normal" title="Submit">
-                                            <color key="titleColor" red="0.21160324220000001" green="0.24511337759999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.21160324220000001" green="0.24511337759999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="XOw-oG-ujd" firstAttribute="leading" secondItem="1mr-v9-K0O" secondAttribute="leading" constant="8" id="B80-Al-gWN"/>
-                                    <constraint firstAttribute="trailing" secondItem="XOw-oG-ujd" secondAttribute="trailing" constant="86" id="Ew5-mx-GNd"/>
-                                    <constraint firstItem="XOw-oG-ujd" firstAttribute="centerY" secondItem="1mr-v9-K0O" secondAttribute="centerY" id="GdL-gD-QEg"/>
-                                    <constraint firstItem="cK9-bf-7Bb" firstAttribute="centerY" secondItem="1mr-v9-K0O" secondAttribute="centerY" id="bCG-e6-HR8"/>
-                                    <constraint firstAttribute="trailing" secondItem="cK9-bf-7Bb" secondAttribute="trailing" constant="8" id="nXM-Hd-UCO"/>
-                                    <constraint firstAttribute="height" constant="64" id="xAP-IU-qys"/>
-                                </constraints>
-                            </view>
-                            <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQ6-jd-Nas" userLabel="Location input View">
-                                <rect key="frame" x="0.0" y="64" width="600" height="64"/>
+                            <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQ6-jd-Nas" userLabel="Location input View">
+                                <rect key="frame" x="0.0" y="64" width="600" height="54"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" alpha="0.89999997615814209" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="🔍 Enter Your Location Here" textAlignment="center" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="iRH-5b-fOi" userLabel="Location Text Field">
-                                        <rect key="frame" x="8" y="13" width="584" height="38"/>
+                                        <rect key="frame" x="8" y="8" width="584" height="38"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="dBt-ei-O9A"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.21160324220000001" green="0.24511337759999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="iRH-5b-fOi" secondAttribute="trailing" constant="8" id="6CG-9c-Dgh"/>
+                                    <constraint firstItem="iRH-5b-fOi" firstAttribute="trailing" secondItem="fQ6-jd-Nas" secondAttribute="trailing" constant="-8" id="6CG-9c-Dgh"/>
                                     <constraint firstItem="iRH-5b-fOi" firstAttribute="leading" secondItem="fQ6-jd-Nas" secondAttribute="leading" constant="8" id="G7E-lp-lkx"/>
-                                    <constraint firstItem="iRH-5b-fOi" firstAttribute="centerX" secondItem="fQ6-jd-Nas" secondAttribute="centerX" id="NvJ-Wd-oAx"/>
                                     <constraint firstItem="iRH-5b-fOi" firstAttribute="centerY" secondItem="fQ6-jd-Nas" secondAttribute="centerY" id="jNw-Tu-smM"/>
-                                    <constraint firstAttribute="height" constant="64" id="szf-xX-oTc"/>
+                                    <constraint firstAttribute="height" constant="54" id="szf-xX-oTc"/>
+                                </constraints>
+                            </view>
+                            <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1mr-v9-K0O" userLabel="Url Input View">
+                                <rect key="frame" x="0.0" y="546" width="600" height="54"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.90000000000000002" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Your Link Here" textAlignment="center" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="XOw-oG-ujd" userLabel="Url Text Field">
+                                        <rect key="frame" x="8" y="8" width="584" height="38"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="38" id="h3v-4A-vsp"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="send" enablesReturnKeyAutomatically="YES"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" red="0.21160324220000001" green="0.24511337759999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="XOw-oG-ujd" firstAttribute="leading" secondItem="1mr-v9-K0O" secondAttribute="leading" constant="8" id="B80-Al-gWN"/>
+                                    <constraint firstItem="XOw-oG-ujd" firstAttribute="trailing" secondItem="1mr-v9-K0O" secondAttribute="trailing" constant="-8" id="Ew5-mx-GNd"/>
+                                    <constraint firstItem="XOw-oG-ujd" firstAttribute="centerY" secondItem="1mr-v9-K0O" secondAttribute="centerY" id="GdL-gD-QEg"/>
+                                    <constraint firstAttribute="height" constant="54" id="xAP-IU-qys"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -418,20 +406,17 @@
                     <connections>
                         <outlet property="locationInputView" destination="fQ6-jd-Nas" id="Gtn-nT-bKG"/>
                         <outlet property="locationTextField" destination="iRH-5b-fOi" id="7ce-vf-JpL"/>
-                        <outlet property="searchDisplayController" destination="GMx-an-L9K" id="ZYo-ZI-Rdc"/>
-                        <outlet property="submitButton" destination="cK9-bf-7Bb" id="7zf-ez-4V0"/>
+                        <outlet property="mapView" destination="ipL-je-cPq" id="JhD-ip-Fbj"/>
+                        <outlet property="searchButton" destination="X2C-9c-lQ1" id="4Mk-uK-pZC"/>
                         <outlet property="urlTextField" destination="XOw-oG-ujd" id="KE5-gT-4fv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tAj-62-KdA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="GMx-an-L9K">
+                <tapGestureRecognizer id="Yxp-KU-D7Q">
                     <connections>
-                        <outlet property="delegate" destination="xhx-Io-D5d" id="jY8-fr-72x"/>
-                        <outlet property="searchContentsController" destination="xhx-Io-D5d" id="Uyt-Zq-6fs"/>
-                        <outlet property="searchResultsDataSource" destination="xhx-Io-D5d" id="tNl-Hu-HO0"/>
-                        <outlet property="searchResultsDelegate" destination="xhx-Io-D5d" id="CTZ-tY-0FO"/>
+                        <action selector="tapMapView:" destination="xhx-Io-D5d" id="R7w-mG-3st"/>
                     </connections>
-                </searchDisplayController>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3783" y="471"/>
         </scene>
@@ -606,6 +591,6 @@
         <image name="Unkown" width="64" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7H6-Hr-EiB"/>
+        <segue reference="tp2-Tl-7lQ"/>
     </inferredMetricsTieBreakers>
 </document>

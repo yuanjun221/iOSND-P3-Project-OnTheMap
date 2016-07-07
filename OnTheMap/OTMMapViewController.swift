@@ -101,7 +101,7 @@ extension OTMMapViewController {
     
     func getStudentsInformation() {
         if !mapView.annotations.isEmpty {
-            mapView.removeAnnotations(self.mapView.annotations)
+            mapView.removeAnnotations(mapView.annotations)
         }
         setViewWaiting(true)
 
