@@ -91,6 +91,7 @@ extension OTMTableViewController: UITableViewDataSource {
                     }
                     
                     performUIUpdatesOnMain {
+                        
                         cell.avatarImageView.image = image
                     }
                     
@@ -159,11 +160,11 @@ extension OTMTableViewController {
     }
     
     func setViewWaiting(indicator: Bool) {
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animateWithDuration(0.25) {
             self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
             self.tableView.alpha = indicator ? 0.6 : 1.0
             self.refreshButton.enabled = !indicator
-        })
+        }
         indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
     }
     

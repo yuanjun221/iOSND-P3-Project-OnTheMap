@@ -14,15 +14,15 @@ import CoreLocation
 // MARK: - View Controller Properties
 class OTMPinViewController: UIViewController, CLLocationManagerDelegate {
 
-    @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var urlTextField: UITextField!
-    
-    @IBOutlet weak var searchButton: UIBarButtonItem!
-    
-    @IBOutlet weak var locationInputView: UIView!
+    @IBOutlet var searchBar: UISearchBar!
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var urlInputView: UIView!
     
+    private var dismissButton: UIBarButtonItem!
+    private var searchButton: UIBarButtonItem!
+
     private var annotation = MKPointAnnotation()
     private var coordinate: CLLocationCoordinate2D?
 
@@ -34,19 +34,21 @@ extension OTMPinViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        locationTextField.delegate = self
         urlTextField.delegate = self
         
-        self.mapView.addAnnotation(annotation)
+        dismissButton = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: #selector(dismissPressed))
+        dismissButton.tintColor = UIColor.whiteColor()
+        
+        searchButton = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(searchPressed))
+        searchButton.tintColor = UIColor.whiteColor()
+        
+        UIBarButtonItem.appearanceWhenContainedInInstancesOfClasses([UISearchBar.self]).tintColor = UIColor.whiteColor()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        locationTextField.layer.cornerRadius = 4.0
         urlTextField.layer.cornerRadius = 4.0
-        
-        locationInputView.alpha = 0
         
         subscribeToKeyboardNotifications()
     }
@@ -61,11 +63,8 @@ extension OTMPinViewController {
 // MARK: - View Touching Behavior
 extension OTMPinViewController {
     @IBAction func tapMapView(sender: AnyObject) {
-        if locationTextField.isFirstResponder() {
-            locationTextField.resignFirstResponder()
-            UIView.animateWithDuration(0.25) {
-                self.locationInputView.alpha = 0
-            }
+        if searchBar.isFirstResponder() {
+            searchBar.resignFirstResponder()
         }
         
         if urlTextField.isFirstResponder() {
@@ -86,17 +85,20 @@ extension OTMPinViewController {
     func keyboardWillShow(notification: NSNotification) {
         if urlTextField.isFirstResponder() {
             view.frame.origin.y = getKeyboardHeight(notification) * -1
-            searchButton.enabled = false
+            UIView.animateWithDuration(0.25) {
+                self.searchButton.enabled = false
+            }
         }
-
     }
     
     func keyboardWillHide(notification: NSNotification) {
         if urlTextField.isFirstResponder() {
             view.frame.origin.y = 0
-            searchButton.enabled = true
+            UIView.animateWithDuration(0.25) {
+                self.searchButton.enabled = true
+            }
+            
         }
-        
     }
     
     func subscribeToKeyboardNotifications() {
@@ -109,27 +111,86 @@ extension OTMPinViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    
 }
 
 
 // MARK: - Buttons Action
 extension OTMPinViewController {
-    @IBAction func cancelPressed(sender: AnyObject) {
+    @IBAction func dismissPressed(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func searchPressed(sender: AnyObject) {
-        toggleLocationInputViewBy(locationInputView.alpha)
+        
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.rightBarButtonItem = nil
+        self.navigationItem.titleView = self.searchBar
+        
+        searchBar.becomeFirstResponder()
+    }
+
+}
+
+
+// MARK: - SearchBar Delegate
+extension OTMPinViewController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
     }
     
-    func toggleLocationInputViewBy(alpha: CGFloat) {
-        
-        UIView.animateWithDuration(0.25) {
-            self.locationInputView.alpha = alpha == 0 ? 0.9 : 0
-        }
-        self.locationInputView.alpha == 0 ? locationTextField.resignFirstResponder() : locationTextField.becomeFirstResponder()
+    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
 
+        UIView.animateWithDuration(0.25, animations: { searchBar.alpha = 0 }, completion: { finished in
+            self.navigationItem.titleView = nil
+            self.navigationItem.leftBarButtonItem = self.dismissButton
+            self.navigationItem.rightBarButtonItem = self.searchButton
+        })
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(searchBar.text!, inRegion: nil) { (placemarks, error) in
+            guard error == nil else {
+                presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
+                print(error?.localizedDescription)
+                return
+            }
+            
+            guard let placemarks = placemarks else {
+                presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
+                return
+            }
+            
+            let placemark = placemarks[0]
+            
+            guard let location = placemark.location else {
+                presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
+                return
+            }
+            
+            UIView.animateWithDuration(0.25) {
+                self.annotation.coordinate = location.coordinate
+            }
+            
+            if self.mapView.annotations.isEmpty {
+                self.mapView.addAnnotation(self.annotation)
+            }
+            
+            if let region = placemark.region as? CLCircularRegion {
+                self.coordinate = region.center
+                let coordinateRegion = MKCoordinateRegionMakeWithDistance(region.center, region.radius * 2, region.radius * 2)
+                self.mapView.regionThatFits(coordinateRegion)
+                self.mapView.setRegion(coordinateRegion, animated: true)
+            }
+            
+        }
     }
 }
 
@@ -138,49 +199,29 @@ extension OTMPinViewController {
 extension OTMPinViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if textField == locationTextField {
-            UIView.animateWithDuration(0.25) {
-                self.locationInputView.alpha = 0
-            }
-            
-            let geocoder = CLGeocoder()
-            geocoder.geocodeAddressString(textField.text!, inRegion: nil) { (placemarks, error) in
-                guard error == nil else {
-                    presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
-                    print(error?.localizedDescription)
-                    return
-                }
-                
-                guard let placemarks = placemarks else {
-                    presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
-                    return
-                }
-                
-                let placemark = placemarks[0]
-                
-                guard let location = placemark.location else {
-                    presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
-                    return
-                }
-                
-                UIView.animateWithDuration(0.25) {
-                    self.annotation.coordinate = location.coordinate
-                }
-                
-                if let region = placemark.region as? CLCircularRegion {
-                    self.coordinate = region.center
-                    let coordinateRegion = MKCoordinateRegionMakeWithDistance(region.center, region.radius * 2, region.radius * 2)
-                    self.mapView.regionThatFits(coordinateRegion)
-                    self.mapView.setRegion(coordinateRegion, animated: true)
-                }
-                
-            }
-        }
-        
-
         textField.resignFirstResponder()
         
+        
+        
+        
+        
+        
+        
         return true
+    }
+    
+
+}
+
+
+extension OTMPinViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return UITableViewCell()
     }
     
 }

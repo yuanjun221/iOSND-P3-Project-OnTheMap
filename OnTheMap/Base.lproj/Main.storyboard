@@ -204,12 +204,12 @@
                         <outlet property="toggleSocialViewButton" destination="nCY-ph-5NY" id="7ZA-cp-CpI"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="umA-G7-IjL">
                     <connections>
                         <action selector="tapView:" destination="BYZ-38-t0r" id="X3Y-7b-h5l"/>
                     </connections>
                 </tapGestureRecognizer>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="313" y="429"/>
         </scene>
@@ -292,7 +292,6 @@
         <!--Post Navigation Controller-->
         <scene sceneID="XoU-Jd-kut">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Kch-xK-qEA" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="BZR-Ug-DOh" userLabel="Post Navigation Controller" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="lkf-Vd-l1g">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -307,6 +306,7 @@
                         <segue destination="xhx-Io-D5d" kind="relationship" relationship="rootViewController" id="a3s-N1-Hlp"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kch-xK-qEA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3112" y="471"/>
         </scene>
@@ -328,27 +328,6 @@
                                     <outletCollection property="gestureRecognizers" destination="Yxp-KU-D7Q" appends="YES" id="edi-Kh-cBM"/>
                                 </connections>
                             </mapView>
-                            <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQ6-jd-Nas" userLabel="Location input View">
-                                <rect key="frame" x="0.0" y="64" width="600" height="54"/>
-                                <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.89999997615814209" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="🔍 Enter Your Location Here" textAlignment="center" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="iRH-5b-fOi" userLabel="Location Text Field">
-                                        <rect key="frame" x="8" y="8" width="584" height="38"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="38" id="dBt-ei-O9A"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
-                                    </textField>
-                                </subviews>
-                                <color key="backgroundColor" red="0.21160324220000001" green="0.24511337759999999" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="iRH-5b-fOi" firstAttribute="trailing" secondItem="fQ6-jd-Nas" secondAttribute="trailing" constant="-8" id="6CG-9c-Dgh"/>
-                                    <constraint firstItem="iRH-5b-fOi" firstAttribute="leading" secondItem="fQ6-jd-Nas" secondAttribute="leading" constant="8" id="G7E-lp-lkx"/>
-                                    <constraint firstItem="iRH-5b-fOi" firstAttribute="centerY" secondItem="fQ6-jd-Nas" secondAttribute="centerY" id="jNw-Tu-smM"/>
-                                    <constraint firstAttribute="height" constant="54" id="szf-xX-oTc"/>
-                                </constraints>
-                            </view>
                             <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1mr-v9-K0O" userLabel="Url Input View">
                                 <rect key="frame" x="0.0" y="546" width="600" height="54"/>
                                 <subviews>
@@ -374,40 +353,34 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ipL-je-cPq" firstAttribute="centerX" secondItem="UrU-F3-QSZ" secondAttribute="centerX" id="0ro-iE-oCZ"/>
-                            <constraint firstItem="fQ6-jd-Nas" firstAttribute="width" secondItem="UrU-F3-QSZ" secondAttribute="width" id="HVl-aN-Z4I"/>
                             <constraint firstItem="ipL-je-cPq" firstAttribute="centerY" secondItem="UrU-F3-QSZ" secondAttribute="centerY" id="LgC-k3-TYi"/>
                             <constraint firstItem="1mr-v9-K0O" firstAttribute="width" secondItem="UrU-F3-QSZ" secondAttribute="width" id="TEV-Ak-ioC"/>
                             <constraint firstItem="ipL-je-cPq" firstAttribute="height" secondItem="UrU-F3-QSZ" secondAttribute="height" id="dE4-lr-cLa"/>
-                            <constraint firstItem="fQ6-jd-Nas" firstAttribute="top" secondItem="HjY-MC-iHU" secondAttribute="bottom" id="daE-aO-bGw"/>
-                            <constraint firstItem="fQ6-jd-Nas" firstAttribute="centerX" secondItem="UrU-F3-QSZ" secondAttribute="centerX" id="fSY-Zv-PAB"/>
                             <constraint firstItem="ipL-je-cPq" firstAttribute="width" secondItem="UrU-F3-QSZ" secondAttribute="width" id="jL5-Ei-Gxh"/>
                             <constraint firstItem="e48-eX-GaZ" firstAttribute="top" secondItem="1mr-v9-K0O" secondAttribute="bottom" id="sUM-8F-Qtp"/>
                             <constraint firstItem="1mr-v9-K0O" firstAttribute="centerX" secondItem="UrU-F3-QSZ" secondAttribute="centerX" id="ysb-KQ-uwr"/>
                         </constraints>
                     </view>
-                    <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="y0x-a0-6YY"/>
-                        <barButtonItem title="Item" id="ktP-OO-Kjb"/>
-                    </toolbarItems>
-                    <navigationItem key="navigationItem" title="Share Your Link" id="Wez-3I-mCv">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="5a5-9X-3R2">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Share Your Link" id="Wez-3I-mCv" userLabel="Navigation Item">
+                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="5a5-9X-3R2">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="cancelPressed:" destination="xhx-Io-D5d" id="HXV-uT-jGQ"/>
+                                <action selector="dismissPressed:" destination="xhx-Io-D5d" id="zuG-MP-30c"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="X2C-9c-lQ1">
+                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="fn9-0B-qKl">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="searchPressed:" destination="xhx-Io-D5d" id="Q9M-HA-E2v"/>
+                                <action selector="searchPressed:" destination="xhx-Io-D5d" id="AMh-i1-sEP"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="locationInputView" destination="fQ6-jd-Nas" id="Gtn-nT-bKG"/>
-                        <outlet property="locationTextField" destination="iRH-5b-fOi" id="7ce-vf-JpL"/>
                         <outlet property="mapView" destination="ipL-je-cPq" id="JhD-ip-Fbj"/>
-                        <outlet property="searchButton" destination="X2C-9c-lQ1" id="4Mk-uK-pZC"/>
+                        <outlet property="searchBar" destination="riL-L8-PeP" id="cvV-5C-CpU"/>
+                        <outlet property="searchDisplayController" destination="g7U-ds-Wsr" id="PWo-6C-7Dv"/>
+                        <outlet property="urlInputView" destination="1mr-v9-K0O" id="RtT-TB-Bwz"/>
                         <outlet property="urlTextField" destination="XOw-oG-ujd" id="KE5-gT-4fv"/>
                     </connections>
                 </viewController>
@@ -417,6 +390,27 @@
                         <action selector="tapMapView:" destination="xhx-Io-D5d" id="R7w-mG-3st"/>
                     </connections>
                 </tapGestureRecognizer>
+                <searchBar contentMode="redraw" placeholder="Search Location" id="riL-L8-PeP">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+                    <scopeButtonTitles>
+                        <string>Title</string>
+                        <string>Title</string>
+                    </scopeButtonTitles>
+                    <connections>
+                        <outlet property="delegate" destination="xhx-Io-D5d" id="P9L-Mw-kUN"/>
+                    </connections>
+                </searchBar>
+                <searchDisplayController id="g7U-ds-Wsr">
+                    <connections>
+                        <outlet property="delegate" destination="xhx-Io-D5d" id="ekF-fu-4bs"/>
+                        <outlet property="searchBar" destination="riL-L8-PeP" id="iry-xC-TyB"/>
+                        <outlet property="searchContentsController" destination="xhx-Io-D5d" id="Udf-HS-tvF"/>
+                        <outlet property="searchResultsDataSource" destination="xhx-Io-D5d" id="Vu5-KC-pxi"/>
+                        <outlet property="searchResultsDelegate" destination="xhx-Io-D5d" id="OsF-Vl-Q2L"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="3783" y="471"/>
         </scene>
