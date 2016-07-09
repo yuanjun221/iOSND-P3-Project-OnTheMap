@@ -13,17 +13,18 @@ import CoreLocation
 
 // MARK: - View Controller Properties
 class OTMPinViewController: UIViewController, CLLocationManagerDelegate {
-
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet var searchBar: UISearchBar!
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var urlInputView: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     private var dismissButton: UIBarButtonItem!
     private var searchButton: UIBarButtonItem!
 
     private var annotation = MKPointAnnotation()
+    private var currentValidMapString: String!
     private var coordinate: CLLocationCoordinate2D?
 
 }
@@ -86,7 +87,7 @@ extension OTMPinViewController {
         if urlTextField.isFirstResponder() {
             view.frame.origin.y = getKeyboardHeight(notification) * -1
             UIView.animateWithDuration(0.25) {
-                self.searchButton.enabled = false
+                self.navigationItem.rightBarButtonItem?.enabled = false
             }
         }
     }
@@ -95,7 +96,7 @@ extension OTMPinViewController {
         if urlTextField.isFirstResponder() {
             view.frame.origin.y = 0
             UIView.animateWithDuration(0.25) {
-                self.searchButton.enabled = true
+                self.navigationItem.rightBarButtonItem?.enabled = true
             }
             
         }
@@ -117,6 +118,10 @@ extension OTMPinViewController {
 // MARK: - Buttons Action
 extension OTMPinViewController {
     @IBAction func dismissPressed(sender: AnyObject) {
+        
+        if urlTextField.isFirstResponder() {
+            urlTextField.resignFirstResponder()
+        }
         dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -134,7 +139,6 @@ extension OTMPinViewController {
 
 // MARK: - SearchBar Delegate
 extension OTMPinViewController: UISearchBarDelegate {
-    
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
@@ -159,7 +163,7 @@ extension OTMPinViewController: UISearchBarDelegate {
         geocoder.geocodeAddressString(searchBar.text!, inRegion: nil) { (placemarks, error) in
             guard error == nil else {
                 presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
-                print(error?.localizedDescription)
+                print(error!.localizedDescription)
                 return
             }
             
@@ -174,6 +178,8 @@ extension OTMPinViewController: UISearchBarDelegate {
                 presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
                 return
             }
+            
+            self.currentValidMapString = searchBar.text!
             
             UIView.animateWithDuration(0.25) {
                 self.annotation.coordinate = location.coordinate
@@ -197,25 +203,17 @@ extension OTMPinViewController: UISearchBarDelegate {
 
 // MARK: - TextField Delegate
 extension OTMPinViewController: UITextFieldDelegate {
-    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
-        
-        
-        
-        
-        
+        queryUserInfo()
         
         return true
     }
-    
-
 }
 
 
 extension OTMPinViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 0
     }
@@ -227,7 +225,75 @@ extension OTMPinViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 
+extension OTMPinViewController {
+    func queryUserInfo() {
+        
+        guard let coordinate = coordinate else {
+            presentAlertControllerWithTitle("Empty Location", message: "Please specify a location First.", FromHostViewController: self)
+            return
+        }
+        
+        if let uniqueKey = OTMClient.sharedInstance().userUniqueKey {
+            OTMClient.sharedInstance().queryStudentInfoWithUniqueKey(uniqueKey) { (userInfo, error) in
+                let errorDomain = "Error occurred when querying user information: "
+                
+                if let error = error {
+                    if error.code == -2000 {
+                        // user info not in database
+                        // TODO: implement post
+                        
+                        
+                        
+                        
+                    } else {
+                        print(errorDomain + error.localizedDescription)
+                        // TODO: alertView
+                        return
+                    }
+                } else {
+                    // OTMClient.sharedInstance().userInfo = userInfo!
+                    // TODO: implement put
+                    // TODO: when put Done, dismiss view controller and make map view / table view refresh
+                    let alertTitle = "Overwrite Information"
+                    let alertMessage = "You have already posted a location. Would you like to overwrite it?"
+                    
+                    let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
+                    let overwriteAction = UIAlertAction(title: "Overwrite", style: .Destructive) { overwriteAction in
+                        
+                        OTMClient.sharedInstance().putStudentLocation(WithStudentInfo: userInfo!, mapString: self.currentValidMapString, mediaUrl: self.urlTextField.text!, coordinate: coordinate) { (success, error) in
+                            
+                            if success {
+                                print("success")
+                            } else {
+                                print(error)
+                            }
+                            
+                        }
 
+                    }
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+                    alertController.addAction(overwriteAction)
+                    alertController.addAction(cancelAction)
+                    performUIUpdatesOnMain {
+                        self.presentViewController(alertController, animated: true, completion: nil)
+                    }
+                }
+
+                
+            }
+        }
+    }
+    
+    func setViewWaiting(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
+            self.mapView.alpha = indicator ? 0.6 : 1.0
+            self.navigationItem.rightBarButtonItem?.enabled = !indicator
+        }
+        indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    }
+    
+}
 
 
 

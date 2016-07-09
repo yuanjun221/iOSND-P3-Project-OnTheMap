@@ -26,17 +26,29 @@ extension OTMClient {
     struct Methods {
         // MARK: Udacity Methods
         static let Session = "/session"
-        static let UserId = "/users/user_id"
+        static let UserUniqueKey = "/users/_key"
         
         // MARK: Parse Methods
         static let StudentLocation = "/classes/StudentLocation"
+        static let StudentLocationObjectId = "/classes/StudentLocation/_objectId"
         
         // MARK: Google Maps Methods
         static let GeoCode = "/geocode/json"
     }
     
+    struct HTTPHeaderKeys {
+        static let ParseApplicationID = "X-Parse-Application-Id"
+        static let ParseRESTApiKey = "X-Parse-REST-API-Key"
+    }
+    
+    struct HTTPHeaderValues {
+        static let ParseApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
+        static let ParseRESTApiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+    }
+    
     struct URLKeys {
-        static let UserId = "user_id"
+        static let UniqueKey = "_key"
+        static let ObjectId = "_objectId"
     }
     
     struct ParameterKeys {
@@ -48,6 +60,7 @@ extension OTMClient {
         static let Limit = "limit"
         static let Skip = "skip"
         static let Order = "order"
+        static let Where = "where"
         
         // MARK: Google Maps GeoCode Parameter Keys
         static let Latlng = "latlng"
@@ -62,6 +75,7 @@ extension OTMClient {
     struct ParameterValues {
         // MARK: Parse Parameter Values
         static var Limit = "10"
+        static let UniqueKeyPair = "{\"uniqueKey\":\"_key\"}"
         
         // MARK: Google Maps GeoCode Parameter Values
         static let Key = "AIzaSyBNUI5NM4Nv8Ejqit5rZRwP48nWqCDipvg"
@@ -71,6 +85,20 @@ extension OTMClient {
         // MARK: Robohash Parameter Values
         static let Size100 = "100x100"
         // static let Size150 = "150x150"
+    }
+    
+    struct JsonBodyKeys {
+        static let Udacity = "udacity"
+        static let Username = "username"
+        static let Password = "password"
+        
+        static let UniqueKey = "uniqueKey"
+        static let FirstName = "firstName"
+        static let LastName = "lastName"
+        static let MapString = "mapString"
+        static let MediaURL = "mediaURL"
+        static let Latitude = "latitude"
+        static let Longitude = "longitude"
     }
     
     struct ResponseKeys {

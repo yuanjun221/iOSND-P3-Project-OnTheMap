@@ -8,16 +8,15 @@
 
 import Foundation
 import UIKit
+import CoreLocation
 
 extension OTMClient {
     
     func loginWithCredential(username: String, password: String, completionHandlerForLogin: (success: Bool, error: NSError?, errorMessage: String?) -> Void) {
         let method: String = Methods.Session
-        let parameters: [String: AnyObject] = [
-            ParameterKeys.Username: username,
-            ParameterKeys.Password: password]
-        let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
-        
+        let parameters: [String: AnyObject] = [:]
+        let jsonBody = "{\"\(JsonBodyKeys.Udacity)\": {\"\(JsonBodyKeys.Username)\": \"\(username)\", \"\(JsonBodyKeys.Password)\": \"\(password)\"}}"
+
         taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Udacity) { (results, error) in
             
             guard error == nil else {
@@ -36,11 +35,11 @@ extension OTMClient {
             }
             
             guard let key = accountDictionary[ResponseKeys.Key] as? String else {
-                completionHandlerForLogin(success: false, error: NSError(domain: "loginWithCredential", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Key)' in \(accountDictionary)"]), errorMessage: "Parse data from server failed." )
+                completionHandlerForLogin(success: false, error: NSError(domain: "loginWithCredential", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Key)' in \(accountDictionary)"]), errorMessage: "Parse data from server failed.")
                 return
             }
             
-            OTMClient.sharedInstance().userAccountKey = key
+            OTMClient.sharedInstance().userUniqueKey = key
             completionHandlerForLogin(success: true, error: nil, errorMessage: nil)
         }
     }
@@ -67,7 +66,7 @@ extension OTMClient {
         }
     }
     
-    func getCountryCodeFromStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForCountryCode: (result: String?, error: NSError?) -> Void) {
+    func getCountryCodeWithStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForCountryCode: (result: String?, error: NSError?) -> Void) {
         
         let method = Methods.GeoCode
         let parameters: [String: AnyObject] = [
@@ -125,9 +124,9 @@ extension OTMClient {
         }
     }
     
-    func getUserImageUrlFromStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForImageUrl: (result: NSURL?, error: NSError?) -> Void) {
-        var mutableMethod: String = Methods.UserId
-        mutableMethod = subtituteKeyInMethod(mutableMethod, key: OTMClient.URLKeys.UserId, value: studentInfo.uniqueKey)!
+    func getUserImageUrlWithStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForImageUrl: (result: NSURL?, error: NSError?) -> Void) {
+        var mutableMethod: String = Methods.UserUniqueKey
+        mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.UniqueKey, withValue: studentInfo.uniqueKey)!
         let parameters: [String: AnyObject] = [:]
         
         taskForGETMethod(mutableMethod, parameters: parameters, host: .Udacity) { (results, error) in
@@ -153,5 +152,91 @@ extension OTMClient {
             completionHandlerForImageUrl(result: imageUrl, error: nil)
         }
     }
+    
+    func queryStudentInfoWithUniqueKey(key: String, completionHandlerForQueryStudentInfo: (result: OTMStudentInformation?, error: NSError?) -> Void) {
+        let method = Methods.StudentLocation
+        let parameters: [String: AnyObject] = [
+            ParameterKeys.Where: subtituteKeyInString(ParameterValues.UniqueKeyPair, key: URLKeys.UniqueKey, withValue: key)!]
+        
+        taskForGETMethod(method, parameters: parameters, host: .Parse) { (results, error) in
+            guard error == nil else {
+                completionHandlerForQueryStudentInfo(result: nil, error: error)
+                return
+            }
+            
+            if let errorString = results[ResponseKeys.Error] as? String {
+                completionHandlerForQueryStudentInfo(result: nil, error: NSError(domain: "queryStudentInfo parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: errorString]))
+                return
+            }
+            
+            guard let studentResults = results[ResponseKeys.StudentResults] as? [[String: AnyObject]] else {
+                completionHandlerForQueryStudentInfo(result: nil, error: NSError(domain: "queryStudentInfo parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.StudentResults)' in \(results)"]))
+                return
+            }
+            
+            guard !studentResults.isEmpty else {
+                completionHandlerForQueryStudentInfo(result: nil, error: NSError(domain: "queryStudentInfo parsing", code: -2000, userInfo: [NSLocalizedDescriptionKey: "No entry in '\(studentResults)"]))
+                return
+            }
+            
+            let studentInfo = OTMStudentInformation(dictionary: studentResults[0])
+            completionHandlerForQueryStudentInfo(result: studentInfo, error: nil)
+        }
+    }
+    
+    func postStudentLocation(WithStudentInfo studentInfo: OTMStudentInformation, mapString: String, mediaUrl: String, coordinate: CLLocationCoordinate2D, completionHandlerForPostStudentLocation: (success: Bool, error: NSError?) -> Void) {
+        let method: String = Methods.StudentLocation
+        let parameters: [String: AnyObject] = [:]
+        let jsonBody = "{\"\(JsonBodyKeys.UniqueKey)\": \"\(studentInfo.uniqueKey)\", \"\(JsonBodyKeys.FirstName)\": \"\(studentInfo.firstName)\", \"\(JsonBodyKeys.LastName)\": \"\(studentInfo.lastName)\",\"\(JsonBodyKeys.MapString)\": \"\(mapString)\", \"\(JsonBodyKeys.MediaURL)\": \"\(mediaUrl)\",\"\(JsonBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JsonBodyKeys.Longitude)\": \(coordinate.longitude)}"
+        
+        taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Parse) { (results, error) in
+            guard error == nil else {
+                completionHandlerForPostStudentLocation(success: false, error: error)
+                return
+            }
+            
+            print(results)
+            completionHandlerForPostStudentLocation(success: true, error: nil)
+        }
+    }
+    
+    func putStudentLocation(WithStudentInfo studentInfo: OTMStudentInformation, mapString: String, mediaUrl: String, coordinate: CLLocationCoordinate2D, completionHandlerForPutStudentLocation: (success: Bool, error: NSError?) -> Void) {
+        var mutableMethod: String = Methods.StudentLocationObjectId
+        mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.ObjectId, withValue: studentInfo.objectID)!
+        
+        let parameters: [String: AnyObject] = [:]
+        let jsonBody = "{\"\(JsonBodyKeys.UniqueKey)\": \"\(studentInfo.uniqueKey)\", \"\(JsonBodyKeys.FirstName)\": \"\(studentInfo.firstName)\", \"\(JsonBodyKeys.LastName)\": \"\(studentInfo.lastName)\",\"\(JsonBodyKeys.MapString)\": \"\(mapString)\", \"\(JsonBodyKeys.MediaURL)\": \"\(mediaUrl)\",\"\(JsonBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JsonBodyKeys.Longitude)\": \(coordinate.longitude)}"
+        
+        taskForPUTMethod(mutableMethod, parameters: parameters, jsonBody: jsonBody, host: .Parse) { (results, error) in
+            guard error == nil else {
+                completionHandlerForPutStudentLocation(success: false, error: error)
+                return
+            }
+            
+            print(results)
+            completionHandlerForPutStudentLocation(success: true, error: nil)
+        }
+
+    }
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }

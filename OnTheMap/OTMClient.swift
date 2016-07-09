@@ -10,11 +10,11 @@ import Foundation
 
 class OTMClient : NSObject {
     
-    var studentsInfo = [OTMStudentInformation]()
     var session = NSURLSession.sharedSession()
     
-    var userAccountKey: String? = nil
-    // var sessionID: String? = nil
+    var studentsInfo = [OTMStudentInformation]()
+    var userInfo: OTMStudentInformation?
+    var userUniqueKey: String?
     
     override init() {
         super.init()
@@ -26,8 +26,8 @@ class OTMClient : NSObject {
         
         switch host {
         case .Parse:
-            request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-            request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+            request.addValue("\(HTTPHeaderValues.ParseApplicationID)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseApplicationID)")
+            request.addValue("\(HTTPHeaderValues.ParseRESTApiKey)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseRESTApiKey)")
         default:
             break
         }
@@ -38,7 +38,7 @@ class OTMClient : NSObject {
                 completionHandlerForGET(result: nil, error: error)
             }
             
-            guard (error == nil) else {
+            guard error == nil else {
                 sendError("There was an error with request: \(error!.description)")
                 return
             }
@@ -93,7 +93,57 @@ class OTMClient : NSObject {
                 return
             }
             
-            let targetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            var targetData = data
+            
+            switch host {
+            case .Udacity:
+                targetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            default:
+                break
+            }
+            
+            self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForPOST)
+        }
+        
+        task.resume()
+        return task
+    }
+    
+    func taskForPUTMethod(method: String, parameters: [String: AnyObject], jsonBody: String, host: HostIdentifier, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        
+        print(otmURLFromParameters(parameters, withHost: host, pathExtension: method))
+        
+        let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
+        request.HTTPMethod = "PUT"
+        request.addValue("\(HTTPHeaderValues.ParseApplicationID)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseApplicationID)")
+        request.addValue("\(HTTPHeaderValues.ParseRESTApiKey)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseRESTApiKey)")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            func sendError(errorMessage: String) {
+                let error = NSError(domain: "taskForPUTMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
+                completionHandlerForPOST(result: nil, error: error)
+            }
+            
+            guard error == nil else {
+                sendError("There was an error with request: \(error!.description)")
+                return
+            }
+            
+            guard let data = data else {
+                sendError("No data was returned by the request!")
+                return
+            }
+            
+            var targetData = data
+            
+            switch host {
+            case .Udacity:
+                targetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            default:
+                break
+            }
             
             self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForPOST)
         }
@@ -144,7 +194,6 @@ class OTMClient : NSObject {
     }
     
     func otmURLFromParameters(parameters: [String: AnyObject], withHost: HostIdentifier, pathExtension: String? = nil) -> NSURL {
-        
         let components = NSURLComponents()
         components.scheme = Constants.ApiScheme
         switch withHost {
@@ -171,9 +220,9 @@ class OTMClient : NSObject {
         return components.URL!
     }
     
-    func subtituteKeyInMethod(method: String, key: String, value: String) -> String? {
-        if method.rangeOfString("\(key)") != nil {
-            return method.stringByReplacingOccurrencesOfString("\(key)", withString: value)
+    func subtituteKeyInString(string: String, key: String, withValue value: String) -> String? {
+        if string.rangeOfString("\(key)") != nil {
+            return string.stringByReplacingOccurrencesOfString("\(key)", withString: value)
         } else {
             return nil
         }

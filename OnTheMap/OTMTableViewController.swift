@@ -61,7 +61,7 @@ extension OTMTableViewController: UITableViewDataSource {
         if let avatarImage = studentInfo.avatarImage {
             cell.avatarImageView.image = avatarImage
         } else {
-            OTMClient.sharedInstance().getUserImageUrlFromStudentInfo(studentInfo) { (url, error) in
+            OTMClient.sharedInstance().getUserImageUrlWithStudentInfo(studentInfo) { (url, error) in
                 let errorDomain = "Error occurred when getting user image url: "
                 guard error == nil else {
                     print(errorDomain + error!.localizedDescription)
@@ -103,7 +103,7 @@ extension OTMTableViewController: UITableViewDataSource {
         if let countryCode = studentInfo.countryCode {
             cell.flagImageView.image = UIImage(named: countryCode)
         } else {
-            OTMClient.sharedInstance().getCountryCodeFromStudentInfo(studentInfo) { (countryCode, error) in
+            OTMClient.sharedInstance().getCountryCodeWithStudentInfo(studentInfo) { (countryCode, error) in
                 let errorDomain = "Error occurred when getting country code: "
                 guard error == nil else {
                     print(errorDomain + error!.localizedDescription)
@@ -135,7 +135,6 @@ extension OTMTableViewController {
         self.setViewWaiting(true)
         OTMClient.sharedInstance().getStudentsInformation { (studentsInfo, error) in
             let errorDomain = "Error occurred when getting students information: "
-            
             guard error == nil else {
                 print(errorDomain + error!.localizedDescription)
                 performUIUpdatesOnMain {
@@ -155,7 +154,6 @@ extension OTMTableViewController {
                 self.setViewWaiting(false)
                 self.tableView.reloadData()
             }
-            
         }
     }
     
