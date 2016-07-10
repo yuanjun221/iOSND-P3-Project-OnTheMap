@@ -37,6 +37,14 @@ extension OTMMapViewController {
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
+        let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
+        pinViewController.onDismiss = { sender in
+            self.getStudentsInformation()
+        }
+    }
 }
 
 
@@ -45,6 +53,10 @@ extension OTMMapViewController {
     
     @IBAction func refresh(sender: AnyObject) {
         getStudentsInformation()
+    }
+    
+    @IBAction func pinButtonPressed(sender: AnyObject) {
+        performSegueWithIdentifier("pinOnMap", sender: sender)
     }
     
 }
@@ -111,7 +123,7 @@ extension OTMMapViewController {
                 print(errorDomain +  error!.localizedDescription)
                 performUIUpdatesOnMain {
                     self.setViewWaiting(false)
-                    presentAlertControllerWithTitle("Fetching Data Failed", message: "Error occurred when getting students Information", FromHostViewController: self)
+                    presentAlertController(WithTitle: "Fetching Data Failed", message: "Error occurred when getting students Information", ForHostViewController: self)
                 }
                 return
             }

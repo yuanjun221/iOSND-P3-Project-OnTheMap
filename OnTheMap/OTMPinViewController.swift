@@ -13,12 +13,15 @@ import CoreLocation
 
 // MARK: - View Controller Properties
 class OTMPinViewController: UIViewController, CLLocationManagerDelegate {
+
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet var searchBar: UISearchBar!
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var urlInputView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    var onDismiss: ((sender: UIViewController) -> Void)!
     
     private var dismissButton: UIBarButtonItem!
     private var searchButton: UIBarButtonItem!
@@ -162,20 +165,20 @@ extension OTMPinViewController: UISearchBarDelegate {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(searchBar.text!, inRegion: nil) { (placemarks, error) in
             guard error == nil else {
-                presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
+                presentAlertController(WithTitle: "Cannot find a location.", message: nil, ForHostViewController: self)
                 print(error!.localizedDescription)
                 return
             }
             
             guard let placemarks = placemarks else {
-                presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
+                presentAlertController(WithTitle: "Cannot find a location.", message: nil, ForHostViewController: self)
                 return
             }
             
             let placemark = placemarks[0]
             
             guard let location = placemark.location else {
-                presentAlertControllerWithTitle("Cannot find a location.", message: nil, FromHostViewController: self)
+                presentAlertController(WithTitle: "Cannot find a location.", message: nil, ForHostViewController: self)
                 return
             }
             
@@ -205,9 +208,7 @@ extension OTMPinViewController: UISearchBarDelegate {
 extension OTMPinViewController: UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        
         queryUserInfo()
-        
         return true
     }
 }
@@ -227,58 +228,112 @@ extension OTMPinViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension OTMPinViewController {
     func queryUserInfo() {
-        
         guard let coordinate = coordinate else {
-            presentAlertControllerWithTitle("Empty Location", message: "Please specify a location First.", FromHostViewController: self)
+            presentAlertController(WithTitle:"Empty Location", message: "Please specify a location First.", ForHostViewController: self)
             return
         }
         
-        if let uniqueKey = OTMClient.sharedInstance().userUniqueKey {
-            OTMClient.sharedInstance().queryStudentInfoWithUniqueKey(uniqueKey) { (userInfo, error) in
-                let errorDomain = "Error occurred when querying user information: "
-                
-                if let error = error {
-                    if error.code == -2000 {
-                        // user info not in database
-                        // TODO: implement post
+        guard let uniqueKey = OTMClient.sharedInstance().userUniqueKey else {
+            presentAlertController(WithTitle:"No User Logged In", message: "Please check your loggin information.", ForHostViewController: self)
+            return
+        }
+        
+        setViewWaiting(true)
+        
+        OTMClient.sharedInstance().queryStudentInfoWithUniqueKey(uniqueKey) { (userInfo, error) in
+            let errorDomain = "Error occurred when querying user information: "
+            
+            if let error = error {
+                // user information not in data base
+                if error.code == -2000 {
+                    OTMClient.sharedInstance().getUserNameWithUniqueKey(uniqueKey) { (name, error) in
+                        guard error == error else {
+                            print(error!.localizedDescription)
+                            performUIUpdatesOnMain {
+                                self.setViewWaiting(false)
+                                presentAlertController(WithTitle: "Create Information Failed", message: "Connection timed out.", ForHostViewController: self)
+                            }
+                            return
+                        }
                         
-                        
-                        
-                        
-                    } else {
-                        print(errorDomain + error.localizedDescription)
-                        // TODO: alertView
-                        return
+                        self.postUserLocation(WithUniqueKey: uniqueKey, name: name!, coordinate: coordinate)
                     }
                 } else {
-                    // OTMClient.sharedInstance().userInfo = userInfo!
-                    // TODO: implement put
-                    // TODO: when put Done, dismiss view controller and make map view / table view refresh
-                    let alertTitle = "Overwrite Information"
-                    let alertMessage = "You have already posted a location. Would you like to overwrite it?"
-                    
-                    let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
-                    let overwriteAction = UIAlertAction(title: "Overwrite", style: .Destructive) { overwriteAction in
-                        
-                        OTMClient.sharedInstance().putStudentLocation(WithStudentInfo: userInfo!, mapString: self.currentValidMapString, mediaUrl: self.urlTextField.text!, coordinate: coordinate) { (success, error) in
-                            
-                            if success {
-                                print("success")
-                            } else {
-                                print(error)
-                            }
-                            
-                        }
-
-                    }
-                    let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-                    alertController.addAction(overwriteAction)
-                    alertController.addAction(cancelAction)
+                    print(errorDomain + error.localizedDescription)
                     performUIUpdatesOnMain {
-                        self.presentViewController(alertController, animated: true, completion: nil)
+                        self.setViewWaiting(false)
+                        presentAlertController(WithTitle: "Query Information Failed", message: "Connection timed out.", ForHostViewController: self)
+                    }
+                    return
+                }
+                
+            } else {
+                let alertTitle = "Overwrite Information"
+                let alertMessage = "You have already posted a location. Would you like to overwrite it?"
+                let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
+                
+                let overwriteAction = UIAlertAction(title: "Overwrite", style: .Destructive) { overwriteAction in
+                    self.putUserLocation(WithUserInfo: userInfo!, coordinate: coordinate)
+                }
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { cancelAction in
+                    performUIUpdatesOnMain {
+                        self.setViewWaiting(false)
                     }
                 }
-
+                
+                alertController.addAction(overwriteAction)
+                alertController.addAction(cancelAction)
+                
+                performUIUpdatesOnMain {
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
+            }
+            
+        }
+    }
+    
+    func postUserLocation(WithUniqueKey uniqueKey: String, name: (String, String), coordinate: CLLocationCoordinate2D) {
+        OTMClient.sharedInstance().postStudentLocation(WithUniqueKey: uniqueKey, name: name, mapString: self.currentValidMapString, mediaUrl: self.urlTextField.text!, coordinate: coordinate) { (success, error) in
+            
+            performUIUpdatesOnMain {
+                self.setViewWaiting(false)
+            }
+            
+            if success {
+                performUIUpdatesOnMain {
+                    self.dismissViewControllerAnimated(true) {
+                        self.onDismiss(sender: self)
+                    }
+                }
+            } else {
+                print(error!.localizedDescription)
+                performUIUpdatesOnMain {
+                    presentAlertController(WithTitle: "Create Information Failed", message: "Connection timed out.", ForHostViewController: self)
+                }
+                
+            }
+        }
+    }
+    
+    func putUserLocation(WithUserInfo userInfo: OTMStudentInformation, coordinate: CLLocationCoordinate2D) {
+        OTMClient.sharedInstance().putStudentLocation(WithStudentInfo: userInfo, mapString: self.currentValidMapString, mediaUrl: self.urlTextField.text!, coordinate: coordinate) { (success, error) in
+            
+            performUIUpdatesOnMain {
+                self.setViewWaiting(false)
+            }
+            
+            if success {
+                performUIUpdatesOnMain {
+                    self.dismissViewControllerAnimated(true) {
+                        self.onDismiss(sender: self)
+                    }
+                }
+            } else {
+                print(error!.localizedDescription)
+                performUIUpdatesOnMain {
+                    presentAlertController(WithTitle: "Update Information Failed", message: "Connection timed out.", ForHostViewController: self)
+                }
                 
             }
         }
@@ -294,35 +349,3 @@ extension OTMPinViewController {
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

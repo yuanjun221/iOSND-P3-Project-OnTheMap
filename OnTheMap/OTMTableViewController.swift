@@ -30,6 +30,14 @@ extension OTMTableViewController {
         }
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
+        let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
+        pinViewController.onDismiss = { sender in
+            self.getStudentsInformation()
+        }
+    }
+    
 }
 
 
@@ -38,6 +46,9 @@ extension OTMTableViewController {
         getStudentsInformation()
     }
     
+    @IBAction func pinButtonPressed(sender: AnyObject) {
+        performSegueWithIdentifier("pinOnMap", sender: sender)
+    }
 }
 
 
@@ -139,7 +150,7 @@ extension OTMTableViewController {
                 print(errorDomain + error!.localizedDescription)
                 performUIUpdatesOnMain {
                     self.setViewWaiting(false)
-                    presentAlertControllerWithTitle("Fetching Data Failed", message: "Error occurred when getting students information.", FromHostViewController: self)
+                    presentAlertController(WithTitle: "Fetching Data Failed", message: "Error occurred when getting students information.", ForHostViewController: self)
                 }
                 return
             }

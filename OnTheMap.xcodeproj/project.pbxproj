@@ -22,6 +22,7 @@
 		BF3AB8901D28D06500BD318B /* OTMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB88F1D28D06500BD318B /* OTMHelper.swift */; };
 		BF3AB8921D2900D400BD318B /* OTMTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */; };
 		BF55C3741D295968005CBD15 /* OTMTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF55C3731D295968005CBD15 /* OTMTableViewCell.swift */; };
+		BFB832751D313FCA00874181 /* OTMPinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		BF3AB88F1D28D06500BD318B /* OTMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMHelper.swift; sourceTree = "<group>"; };
 		BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewController.swift; sourceTree = "<group>"; };
 		BF55C3731D295968005CBD15 /* OTMTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewCell.swift; sourceTree = "<group>"; };
+		BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMPinNavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,8 +93,9 @@
 				BF3AB88B1D26B3B600BD318B /* OTMMapViewController.swift */,
 				BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */,
 				BF55C3731D295968005CBD15 /* OTMTableViewCell.swift */,
-				BF3AB88F1D28D06500BD318B /* OTMHelper.swift */,
+				BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */,
 				BF249DC71D2CE4FA00FAF8AB /* OTMPinViewController.swift */,
+				BF3AB88F1D28D06500BD318B /* OTMHelper.swift */,
 			);
 			name = "View Controller";
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				BF3AB8861D252A5F00BD318B /* OTMConvenience.swift in Sources */,
 				BF55C3741D295968005CBD15 /* OTMTableViewCell.swift in Sources */,
 				BF3AB8901D28D06500BD318B /* OTMHelper.swift in Sources */,
+				BFB832751D313FCA00874181 /* OTMPinNavigationController.swift in Sources */,
 				BF3AB88E1D27A48B00BD318B /* OTMStudentInformation.swift in Sources */,
 				BF3AB86E1D221D0000BD318B /* AppDelegate.swift in Sources */,
 				BF3AB88C1D26B3B600BD318B /* OTMMapViewController.swift in Sources */,

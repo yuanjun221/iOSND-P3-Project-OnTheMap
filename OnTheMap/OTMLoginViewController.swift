@@ -124,7 +124,7 @@ extension OTMLoginViewController {
     
     @IBAction func login(sender: AnyObject) {
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
-            presentAlertControllerWithTitle("Login Failed", message: "Empty Email or Password.", FromHostViewController: self)
+            presentAlertController(WithTitle: "Login Failed", message: "Empty Email or Password.", ForHostViewController: self)
         } else {
             setUIEnabled(false)
             
@@ -142,7 +142,7 @@ extension OTMLoginViewController {
                 } else {
                     print(error!.localizedDescription)
                     performUIUpdatesOnMain {
-                        presentAlertControllerWithTitle("Login Failed", message: errorMessage!, FromHostViewController: self)
+                        presentAlertController(WithTitle: "Login Failed", message: errorMessage!, ForHostViewController: self)
                     }
                     
                 }

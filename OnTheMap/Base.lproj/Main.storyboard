@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
@@ -271,10 +272,10 @@
                                     <action selector="refresh:" destination="43c-KG-gL1" id="5HD-ex-m7C"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="Pin" id="awd-X5-1e0" userLabel="Add Pin Button">
+                            <barButtonItem image="Pin" id="awd-X5-1e0" userLabel="Pin Button">
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="BZR-Ug-DOh" kind="presentation" id="tp2-Tl-7lQ"/>
+                                    <action selector="pinButtonPressed:" destination="43c-KG-gL1" id="4PE-p8-9Th"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -283,6 +284,7 @@
                         <outlet property="activityIndicator" destination="x0x-XY-YWt" id="qXf-kj-tmb"/>
                         <outlet property="mapView" destination="V0u-W2-XJI" id="FpG-Ou-aOV"/>
                         <outlet property="refreshButton" destination="IUq-bZ-Gh5" id="5BI-V4-8RA"/>
+                        <segue destination="BZR-Ug-DOh" kind="presentation" identifier="pinOnMap" id="heX-39-LWh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xzh-kw-NKl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -292,7 +294,7 @@
         <!--Post Navigation Controller-->
         <scene sceneID="XoU-Jd-kut">
             <objects>
-                <navigationController id="BZR-Ug-DOh" userLabel="Post Navigation Controller" sceneMemberID="viewController">
+                <navigationController id="BZR-Ug-DOh" userLabel="Post Navigation Controller" customClass="OTMPinNavigationController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="lkf-Vd-l1g">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -444,14 +446,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="68"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oO1-at-0jb">
-                                                    <rect key="frame" x="82" y="14" width="434" height="20"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oO1-at-0jb">
+                                                    <rect key="frame" x="83" y="14" width="434" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://www.google.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IeN-5c-pxE">
-                                                    <rect key="frame" x="82" y="41" width="434" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="http://www.google.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IeN-5c-pxE">
+                                                    <rect key="frame" x="83" y="41" width="434" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -465,8 +467,8 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefaultAvatar" translatesAutoresizingMaskIntoConstraints="NO" id="ufh-rb-kAj" userLabel="Avatar Image View">
                                                     <rect key="frame" x="20" y="5" width="50" height="50"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="9NN-3p-3Jn"/>
-                                                        <constraint firstAttribute="height" constant="50" id="gUD-dp-v16"/>
+                                                        <constraint firstAttribute="height" constant="50" id="8LN-N1-lw2"/>
+                                                        <constraint firstAttribute="width" secondItem="ufh-rb-kAj" secondAttribute="height" multiplier="1:1" id="nXa-9I-SWC"/>
                                                     </constraints>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Unkown" translatesAutoresizingMaskIntoConstraints="NO" id="wLc-El-oQu" userLabel="Flag Image View">
@@ -478,18 +480,18 @@
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="KO5-D7-WCr" secondAttribute="bottom" constant="4" id="0hr-NF-kjq"/>
+                                                <constraint firstItem="KO5-D7-WCr" firstAttribute="bottom" secondItem="CUW-Ch-lHh" secondAttribute="bottomMargin" constant="-4" id="0hr-NF-kjq"/>
                                                 <constraint firstItem="ufh-rb-kAj" firstAttribute="top" secondItem="CUW-Ch-lHh" secondAttribute="topMargin" constant="-3" id="0lv-LT-Am9"/>
-                                                <constraint firstItem="IeN-5c-pxE" firstAttribute="leading" secondItem="CUW-Ch-lHh" secondAttribute="leadingMargin" constant="74" id="6UK-4L-0Xx"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="IeN-5c-pxE" secondAttribute="bottom" constant="2" id="6gh-s4-6lU"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="KO5-D7-WCr" secondAttribute="trailing" constant="12" id="CC2-zq-ZfS"/>
-                                                <constraint firstItem="oO1-at-0jb" firstAttribute="leading" secondItem="CUW-Ch-lHh" secondAttribute="leadingMargin" constant="74" id="FIa-jR-lIA"/>
+                                                <constraint firstItem="IeN-5c-pxE" firstAttribute="bottom" secondItem="CUW-Ch-lHh" secondAttribute="bottomMargin" constant="-2" id="6gh-s4-6lU"/>
+                                                <constraint firstItem="KO5-D7-WCr" firstAttribute="trailing" secondItem="CUW-Ch-lHh" secondAttribute="trailingMargin" constant="-12" id="CC2-zq-ZfS"/>
+                                                <constraint firstItem="oO1-at-0jb" firstAttribute="leading" secondItem="CUW-Ch-lHh" secondAttribute="leadingMargin" constant="75" id="Cxb-uA-5ud"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="oO1-at-0jb" secondAttribute="trailing" priority="999" constant="75" id="F4d-in-Yxz"/>
                                                 <constraint firstItem="ufh-rb-kAj" firstAttribute="leading" secondItem="CUW-Ch-lHh" secondAttribute="leadingMargin" constant="12" id="Hf1-gO-o4D"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="wLc-El-oQu" secondAttribute="trailing" constant="12" id="ILL-1I-kjv"/>
+                                                <constraint firstItem="wLc-El-oQu" firstAttribute="trailing" secondItem="CUW-Ch-lHh" secondAttribute="trailingMargin" constant="-12" id="ILL-1I-kjv"/>
+                                                <constraint firstItem="IeN-5c-pxE" firstAttribute="trailing" secondItem="CUW-Ch-lHh" secondAttribute="trailingMargin" priority="999" constant="-75" id="ONh-Kf-hxf"/>
+                                                <constraint firstItem="IeN-5c-pxE" firstAttribute="leading" secondItem="CUW-Ch-lHh" secondAttribute="leadingMargin" constant="75" id="kLs-ZE-eev"/>
                                                 <constraint firstItem="oO1-at-0jb" firstAttribute="top" secondItem="CUW-Ch-lHh" secondAttribute="topMargin" constant="6" id="ssN-cu-cam"/>
-                                                <constraint firstAttribute="topMargin" secondItem="wLc-El-oQu" secondAttribute="top" id="wOc-QU-y3r"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="IeN-5c-pxE" secondAttribute="trailing" constant="76" id="wxE-Uh-Zr4"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="oO1-at-0jb" secondAttribute="trailing" constant="76" id="x0M-Fc-e5A"/>
+                                                <constraint firstItem="wLc-El-oQu" firstAttribute="top" secondItem="CUW-Ch-lHh" secondAttribute="topMargin" id="wOc-QU-y3r"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -527,10 +529,10 @@
                                     <action selector="refresh:" destination="U1o-x1-9xs" id="SUv-ag-9Gv"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="Pin" id="Iie-H3-zdO">
+                            <barButtonItem image="Pin" id="Iie-H3-zdO" userLabel="Pin Button">
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="BZR-Ug-DOh" kind="presentation" id="7H6-Hr-EiB"/>
+                                    <action selector="pinButtonPressed:" destination="U1o-x1-9xs" id="OOn-ak-4QD"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -539,6 +541,7 @@
                         <outlet property="activityIndicator" destination="ag5-EU-1OF" id="cu6-As-p9z"/>
                         <outlet property="refreshButton" destination="A7P-8N-zc3" id="ybd-sl-QCo"/>
                         <outlet property="tableView" destination="fTM-L7-pvn" id="Oiv-Ey-Szf"/>
+                        <segue destination="BZR-Ug-DOh" kind="presentation" identifier="pinOnMap" id="oNY-qf-0er"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7av-hd-T4K" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -592,6 +595,6 @@
         <image name="Unkown" width="64" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="tp2-Tl-7lQ"/>
+        <segue reference="oNY-qf-0er"/>
     </inferredMetricsTieBreakers>
 </document>

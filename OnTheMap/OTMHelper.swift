@@ -8,7 +8,7 @@
 
 import UIKit
 
-func presentAlertControllerWithTitle(title: String?, message: String?, FromHostViewController hostViewController: UIViewController) {
+func presentAlertController(WithTitle title: String?, message: String?, ForHostViewController hostViewController: UIViewController) {
     let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
     let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
     alertController.addAction(okAction)

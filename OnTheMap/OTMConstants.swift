@@ -112,6 +112,8 @@ extension OTMClient {
         
         static let User = "user"
         static let ImageUrl = "_image_url"
+        static let UserFirstName = "first_name"
+        static let UserLastName = "last_name"
         
         // MARK: Parse Student Information
         static let CreatedAt = "createdAt"

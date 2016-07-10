@@ -11,10 +11,8 @@ import Foundation
 class OTMClient : NSObject {
     
     var session = NSURLSession.sharedSession()
-    
-    var studentsInfo = [OTMStudentInformation]()
-    var userInfo: OTMStudentInformation?
     var userUniqueKey: String?
+    var studentsInfo = [OTMStudentInformation]()
     
     override init() {
         super.init()
@@ -110,9 +108,6 @@ class OTMClient : NSObject {
     }
     
     func taskForPUTMethod(method: String, parameters: [String: AnyObject], jsonBody: String, host: HostIdentifier, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        
-        print(otmURLFromParameters(parameters, withHost: host, pathExtension: method))
-        
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
         request.HTTPMethod = "PUT"
         request.addValue("\(HTTPHeaderValues.ParseApplicationID)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseApplicationID)")
