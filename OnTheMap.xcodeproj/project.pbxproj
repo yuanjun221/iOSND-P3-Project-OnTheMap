@@ -21,8 +21,13 @@
 		BF3AB88E1D27A48B00BD318B /* OTMStudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB88D1D27A48B00BD318B /* OTMStudentInformation.swift */; };
 		BF3AB8901D28D06500BD318B /* OTMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB88F1D28D06500BD318B /* OTMHelper.swift */; };
 		BF3AB8921D2900D400BD318B /* OTMTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */; };
-		BF55C3741D295968005CBD15 /* OTMTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF55C3731D295968005CBD15 /* OTMTableViewCell.swift */; };
 		BFB832751D313FCA00874181 /* OTMPinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */; };
+		BFFDF9481D33730200067999 /* OTMTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF9471D33730200067999 /* OTMTableViewCell.swift */; };
+		BFFDF9521D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */; };
+		BFFDF9531D3375CE00067999 /* OTMDetailNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF94D1D3375CE00067999 /* OTMDetailNameTableViewCell.swift */; };
+		BFFDF9541D3375CE00067999 /* OTMDetailUrlTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF94E1D3375CE00067999 /* OTMDetailUrlTableViewCell.swift */; };
+		BFFDF9551D3375CE00067999 /* OTMDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF94F1D3375CE00067999 /* OTMDetailViewController.swift */; };
+		BFFDF9571D3375E200067999 /* OTMMKPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF9561D3375E200067999 /* OTMMKPointAnnotation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +47,13 @@
 		BF3AB88D1D27A48B00BD318B /* OTMStudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMStudentInformation.swift; sourceTree = "<group>"; };
 		BF3AB88F1D28D06500BD318B /* OTMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMHelper.swift; sourceTree = "<group>"; };
 		BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewController.swift; sourceTree = "<group>"; };
-		BF55C3731D295968005CBD15 /* OTMTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewCell.swift; sourceTree = "<group>"; };
 		BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMPinNavigationController.swift; sourceTree = "<group>"; };
+		BFFDF9471D33730200067999 /* OTMTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewCell.swift; sourceTree = "<group>"; };
+		BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDetailMapViewTableViewCell.swift; sourceTree = "<group>"; };
+		BFFDF94D1D3375CE00067999 /* OTMDetailNameTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDetailNameTableViewCell.swift; sourceTree = "<group>"; };
+		BFFDF94E1D3375CE00067999 /* OTMDetailUrlTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDetailUrlTableViewCell.swift; sourceTree = "<group>"; };
+		BFFDF94F1D3375CE00067999 /* OTMDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDetailViewController.swift; sourceTree = "<group>"; };
+		BFFDF9561D3375E200067999 /* OTMMKPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMMKPointAnnotation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,13 +99,14 @@
 		BF3AB8871D26B26600BD318B /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
+				BFFDF9581D3375EB00067999 /* Sub View */,
 				BF3AB86F1D221D0000BD318B /* OTMLoginViewController.swift */,
 				BF3AB88B1D26B3B600BD318B /* OTMMapViewController.swift */,
 				BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */,
-				BF55C3731D295968005CBD15 /* OTMTableViewCell.swift */,
+				BFFDF94F1D3375CE00067999 /* OTMDetailViewController.swift */,
 				BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */,
 				BF249DC71D2CE4FA00FAF8AB /* OTMPinViewController.swift */,
-				BF3AB88F1D28D06500BD318B /* OTMHelper.swift */,
+				BFFDF9471D33730200067999 /* OTMTableViewCell.swift */,
 			);
 			name = "View Controller";
 			sourceTree = "<group>";
@@ -127,6 +138,26 @@
 				BF3AB88D1D27A48B00BD318B /* OTMStudentInformation.swift */,
 			);
 			name = Clients;
+			sourceTree = "<group>";
+		};
+		BFFDF9491D33759700067999 /* Table View Cell */ = {
+			isa = PBXGroup;
+			children = (
+				BFFDF94D1D3375CE00067999 /* OTMDetailNameTableViewCell.swift */,
+				BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */,
+				BFFDF94E1D3375CE00067999 /* OTMDetailUrlTableViewCell.swift */,
+			);
+			name = "Table View Cell";
+			sourceTree = "<group>";
+		};
+		BFFDF9581D3375EB00067999 /* Sub View */ = {
+			isa = PBXGroup;
+			children = (
+				BFFDF9491D33759700067999 /* Table View Cell */,
+				BFFDF9561D3375E200067999 /* OTMMKPointAnnotation.swift */,
+				BF3AB88F1D28D06500BD318B /* OTMHelper.swift */,
+			);
+			name = "Sub View";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,16 +235,21 @@
 				BF3AB8701D221D0000BD318B /* OTMLoginViewController.swift in Sources */,
 				BF3AB8821D24E73300BD318B /* OTMClient.swift in Sources */,
 				BF3AB8801D24E6BA00BD318B /* GCDBlackBox.swift in Sources */,
+				BFFDF9551D3375CE00067999 /* OTMDetailViewController.swift in Sources */,
+				BFFDF9531D3375CE00067999 /* OTMDetailNameTableViewCell.swift in Sources */,
 				BF249DC81D2CE4FA00FAF8AB /* OTMPinViewController.swift in Sources */,
+				BFFDF9541D3375CE00067999 /* OTMDetailUrlTableViewCell.swift in Sources */,
+				BFFDF9521D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift in Sources */,
 				BF3AB8921D2900D400BD318B /* OTMTableViewController.swift in Sources */,
 				BF3AB8841D24E90300BD318B /* OTMConstants.swift in Sources */,
 				BF3AB8861D252A5F00BD318B /* OTMConvenience.swift in Sources */,
-				BF55C3741D295968005CBD15 /* OTMTableViewCell.swift in Sources */,
 				BF3AB8901D28D06500BD318B /* OTMHelper.swift in Sources */,
+				BFFDF9571D3375E200067999 /* OTMMKPointAnnotation.swift in Sources */,
 				BFB832751D313FCA00874181 /* OTMPinNavigationController.swift in Sources */,
 				BF3AB88E1D27A48B00BD318B /* OTMStudentInformation.swift in Sources */,
 				BF3AB86E1D221D0000BD318B /* AppDelegate.swift in Sources */,
 				BF3AB88C1D26B3B600BD318B /* OTMMapViewController.swift in Sources */,
+				BFFDF9481D33730200067999 /* OTMTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

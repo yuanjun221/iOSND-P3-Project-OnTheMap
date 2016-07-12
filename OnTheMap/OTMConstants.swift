@@ -84,7 +84,7 @@ extension OTMClient {
         
         // MARK: Robohash Parameter Values
         static let Size100 = "100x100"
-        // static let Size150 = "150x150"
+        static let Size150 = "150x150"
     }
     
     struct JsonBodyKeys {

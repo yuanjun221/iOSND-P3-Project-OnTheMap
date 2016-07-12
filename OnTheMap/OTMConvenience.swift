@@ -154,10 +154,48 @@ extension OTMClient {
             }
             
             let urlExtension = (imageUrlString as NSString).substringFromIndex(14)
-            let parameters: [String: AnyObject] = [ParameterKeys.Size: ParameterValues.Size100]
+            let parameters: [String: AnyObject] = [ParameterKeys.Size: ParameterValues.Size150]
             let imageUrl = self.otmURLFromParameters(parameters, withHost: .Robohash, pathExtension: urlExtension)
             
             completionHandlerForImageUrl(result: imageUrl, error: nil)
+        }
+    }
+    
+    func getAvatarImageWithStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForAvatarImage: (image: UIImage?, error: NSError?) -> Void) {
+        OTMClient.sharedInstance().getUserImageUrlWithStudentInfo(studentInfo) { (url, error) in
+            guard error == nil else {
+                completionHandlerForAvatarImage(image: nil, error: error)
+                return
+            }
+            
+            let errorDomain = "GetUserImage Parsing"
+            
+            guard let url = url else {
+                completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No url returned."]))
+                return
+            }
+            
+            OTMClient.sharedInstance().taskForGETImageData(url) { (data, error) in
+                guard error == nil else {
+                    print(errorDomain + error!.localizedDescription)
+                    completionHandlerForAvatarImage(image: nil, error: error)
+                    return
+                }
+                
+                let errorDomain = "GetImageData Parsing"
+                
+                guard let data = data else {
+                    completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No image data returned."]))
+                    return
+                }
+                
+                guard let image = UIImage(data: data) else {
+                    completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No image from image data."]))
+                    return
+                }
+                
+                completionHandlerForAvatarImage(image: image, error: nil)
+            }
         }
     }
     
@@ -226,9 +264,24 @@ extension OTMClient {
         }
     }
     
+    func deleteStudentInfoWithObjectId(objectId: String, completionHandlerForDeleteStudentInfo: (success: Bool, error: NSError?) -> Void) {
+        var mutableMethod: String = Methods.StudentLocationObjectId
+        mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.ObjectId, withValue: objectId)!
+        let parameters = [String: AnyObject]()
+        
+        taskForDELETEMethod(mutableMethod, parameters: parameters, host: .Parse) { (results, error) in
+            guard error == nil else {
+                completionHandlerForDeleteStudentInfo(success: false, error: error)
+                return
+            }
+            
+            completionHandlerForDeleteStudentInfo(success: true, error: nil)
+        }
+    }
+    
     func postStudentLocation(WithUniqueKey uniqueKey: String, name: (String, String), mapString: String, mediaUrl: String, coordinate: CLLocationCoordinate2D, completionHandlerForPostStudentLocation: (success: Bool, error: NSError?) -> Void) {
         let method: String = Methods.StudentLocation
-        let parameters: [String: AnyObject] = [:]
+        let parameters = [String: AnyObject]()
         let jsonBody = "{\"\(JsonBodyKeys.UniqueKey)\": \"\(uniqueKey)\", \"\(JsonBodyKeys.FirstName)\": \"\(name.0)\", \"\(JsonBodyKeys.LastName)\": \"\(name.1)\",\"\(JsonBodyKeys.MapString)\": \"\(mapString)\", \"\(JsonBodyKeys.MediaURL)\": \"\(mediaUrl)\",\"\(JsonBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JsonBodyKeys.Longitude)\": \(coordinate.longitude)}"
         
         taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Parse) { (results, error) in
@@ -245,7 +298,7 @@ extension OTMClient {
         var mutableMethod: String = Methods.StudentLocationObjectId
         mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.ObjectId, withValue: studentInfo.objectID)!
         
-        let parameters: [String: AnyObject] = [:]
+        let parameters = [String: AnyObject]()
         let jsonBody = "{\"\(JsonBodyKeys.UniqueKey)\": \"\(studentInfo.uniqueKey)\", \"\(JsonBodyKeys.FirstName)\": \"\(studentInfo.firstName)\", \"\(JsonBodyKeys.LastName)\": \"\(studentInfo.lastName)\",\"\(JsonBodyKeys.MapString)\": \"\(mapString)\", \"\(JsonBodyKeys.MediaURL)\": \"\(mediaUrl)\",\"\(JsonBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JsonBodyKeys.Longitude)\": \(coordinate.longitude)}"
         
         taskForPUTMethod(mutableMethod, parameters: parameters, jsonBody: jsonBody, host: .Parse) { (results, error) in
@@ -254,7 +307,6 @@ extension OTMClient {
                 return
             }
             
-            print(results)
             completionHandlerForPutStudentLocation(success: true, error: nil)
         }
 

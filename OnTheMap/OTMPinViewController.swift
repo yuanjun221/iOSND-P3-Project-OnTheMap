@@ -165,20 +165,20 @@ extension OTMPinViewController: UISearchBarDelegate {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(searchBar.text!, inRegion: nil) { (placemarks, error) in
             guard error == nil else {
-                presentAlertController(WithTitle: "Cannot find a location.", message: nil, ForHostViewController: self)
+                presentAlertController(WithTitle: "Cannot find the location.", message: nil, ForHostViewController: self)
                 print(error!.localizedDescription)
                 return
             }
             
             guard let placemarks = placemarks else {
-                presentAlertController(WithTitle: "Cannot find a location.", message: nil, ForHostViewController: self)
+                presentAlertController(WithTitle: "Cannot find the location.", message: nil, ForHostViewController: self)
                 return
             }
             
             let placemark = placemarks[0]
             
             guard let location = placemark.location else {
-                presentAlertController(WithTitle: "Cannot find a location.", message: nil, ForHostViewController: self)
+                presentAlertController(WithTitle: "Cannot find the location.", message: nil, ForHostViewController: self)
                 return
             }
             
@@ -344,6 +344,7 @@ extension OTMPinViewController {
             self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
             self.mapView.alpha = indicator ? 0.6 : 1.0
             self.navigationItem.rightBarButtonItem?.enabled = !indicator
+            self.urlTextField.enabled = !indicator
         }
         indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
     }

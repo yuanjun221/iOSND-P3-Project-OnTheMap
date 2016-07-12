@@ -29,21 +29,70 @@ extension OTMMapViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mapView.delegate = self
         if studentsInfo.isEmpty {
             getStudentsInformation()
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if !mapView.annotations.isEmpty {
+            mapView.removeAnnotations(mapView.annotations)
+            let annotations = annotationsFromStudentsInfo(studentsInfo)
+            mapView.addAnnotations(annotations)
+        }
+
+    }
+        
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
-        let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
-        pinViewController.onDismiss = { sender in
-            self.getStudentsInformation()
+        if segue.identifier == "pinOnMap" {
+            let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
+            let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
+            pinViewController.onDismiss = { sender in
+                self.getStudentsInformation()
+            }
         }
+        
+        if segue.identifier == "pushDetailView" {
+            let detailViewController = segue.destinationViewController as! OTMDetailViewController
+            detailViewController.studentIndex = ((sender as! MKAnnotationView).annotation as! OTMMKPointAnnotation).studentIndex
+            detailViewController.onDismiss = { sender in
+                self.getStudentsInformation()
+            }
+        }
+
+    }
+    
+    func annotationsFromStudentsInfo(studentsInfo: [OTMStudentInformation]) -> [OTMMKPointAnnotation] {
+        var annotations = [OTMMKPointAnnotation]()
+        
+        for index in 0..<studentsInfo.count {
+            let studentInfo = studentsInfo[index]
+            let latitude = CLLocationDegrees(studentInfo.latitude)
+            let longitude = CLLocationDegrees(studentInfo.longitude)
+            
+            let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            
+            let firstName = studentInfo.firstName
+            let lastName = studentInfo.lastName
+            let mediaURL = studentInfo.mediaURL
+            
+            let annotation = OTMMKPointAnnotation()
+            annotation.studentIndex = index
+            annotation.coordinate = coordinate
+            annotation.title = "\(firstName) \(lastName)"
+            annotation.subtitle = mediaURL
+            
+            annotations.append(annotation)
+        }
+        
+        return annotations
     }
 }
 
@@ -64,20 +113,13 @@ extension OTMMapViewController {
 
 // MARK: - MKMapViewDelegate
 extension OTMMapViewController: MKMapViewDelegate {
-    
-    // Here we create a view with a "right callout accessory view". You might choose to look into other
-    // decoration alternatives. Notice the similarity between this method and the cellForRowAtIndexPath
-    // method in TableViewDataSource.
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
         let reuseId = "pin"
-        
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinTintColor = UIColor.redColor()
             pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
         }
         else {
@@ -87,30 +129,16 @@ extension OTMMapViewController: MKMapViewDelegate {
         return pinView
     }
     
-    
-    // This delegate method is implemented to respond to taps. It opens the system browser
-    // to the URL specified in the annotationViews subtitle property.
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            let app = UIApplication.sharedApplication()
-            if let toOpen = view.annotation?.subtitle! {
-                app.openURL(NSURL(string: toOpen)!)
-            }
+            performSegueWithIdentifier("pushDetailView", sender: view)
         }
     }
-    //    func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-    //
-    //        if control == annotationView.rightCalloutAccessoryView {
-    //            let app = UIApplication.sharedApplication()
-    //            app.openURL(NSURL(string: annotationView.annotation.subtitle))
-    //        }
-    //    }
 }
 
 
 // MARK: - Get Students Information
 extension OTMMapViewController {
-    
     func getStudentsInformation() {
         if !mapView.annotations.isEmpty {
             mapView.removeAnnotations(mapView.annotations)
@@ -135,29 +163,54 @@ extension OTMMapViewController {
             
             OTMClient.sharedInstance().studentsInfo = studentsInfo
             
-            var annotations = [MKPointAnnotation]()
-            
-            for info in studentsInfo {
-                let latitude = CLLocationDegrees(info.latitude)
-                let longitude = CLLocationDegrees(info.longitude)
-                
-                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                
-                let firstName = info.firstName
-                let lastName = info.lastName
-                let mediaURL = info.mediaURL
-                
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = coordinate
-                annotation.title = "\(firstName) \(lastName)"
-                annotation.subtitle = mediaURL
-                
-                annotations.append(annotation)
-            }
+            let annotations = self.annotationsFromStudentsInfo(studentsInfo)
             
             performUIUpdatesOnMain {
                 self.mapView.addAnnotations(annotations)
                 self.setViewWaiting(false)
+            }
+            
+            self.getStudentsAvatarAndCountryCodeWithStudentsInfo(studentsInfo)
+        }
+    }
+    
+    func getStudentsAvatarAndCountryCodeWithStudentsInfo(studentsInfo: [OTMStudentInformation]) {
+        for index in 0..<studentsInfo.count {
+            let studentInfo = studentsInfo[index]
+            
+            if studentInfo.avatarImage == nil {
+                OTMClient.sharedInstance().getAvatarImageWithStudentInfo(studentInfo) { (image, error) in
+                    let errorDomain = "Error occurred when getting avatar image: "
+                    
+                    guard error == nil else {
+                        print(errorDomain + error!.localizedDescription)
+                        return
+                    }
+                    
+                    guard let image = image else {
+                        print(errorDomain + "No image returned.")
+                        return
+                    }
+                    
+                    OTMClient.sharedInstance().studentsInfo[index].avatarImage = image
+                }
+            }
+            
+            if studentInfo.countryCode == nil {
+                OTMClient.sharedInstance().getCountryCodeWithStudentInfo(studentInfo) { (countryCode, error) in
+                    let errorDomain = "Error occurred when getting country code: "
+                    guard error == nil else {
+                        print(errorDomain + error!.localizedDescription)
+                        return
+                    }
+                    
+                    guard let countryCode = countryCode else {
+                        print(errorDomain + "No country code returned.")
+                        return
+                    }
+                    
+                    OTMClient.sharedInstance().studentsInfo[index].countryCode = countryCode
+                }
             }
         }
     }

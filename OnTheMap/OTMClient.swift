@@ -71,8 +71,18 @@ class OTMClient : NSObject {
         
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
         request.HTTPMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        switch host {
+        case .Udacity:
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+        case .Parse:
+            request.addValue("\(HTTPHeaderValues.ParseApplicationID)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseApplicationID)")
+            request.addValue("\(HTTPHeaderValues.ParseRESTApiKey)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseRESTApiKey)")
+        default:
+            break
+        }
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
@@ -131,16 +141,36 @@ class OTMClient : NSObject {
                 return
             }
             
-            var targetData = data
-            
-            switch host {
-            case .Udacity:
-                targetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-            default:
-                break
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForPOST)
+        }
+        
+        task.resume()
+        return task
+    }
+    
+    func taskForDELETEMethod(method: String, parameters: [String: AnyObject], host: HostIdentifier, completionHandlerForDELETE: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
+        request.HTTPMethod = "DELETE"
+        request.addValue("\(HTTPHeaderValues.ParseApplicationID)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseApplicationID)")
+        request.addValue("\(HTTPHeaderValues.ParseRESTApiKey)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseRESTApiKey)")
+        
+        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            func sendError(errorMessage: String) {
+                let error = NSError(domain: "taskForDELETEMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
+                completionHandlerForDELETE(result: nil, error: error)
             }
             
-            self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForPOST)
+            guard error == nil else {
+                sendError("There was an error with request: \(error!.description)")
+                return
+            }
+            
+            guard let data = data else {
+                sendError("No data was returned by the request!")
+                return
+            }
+            
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForDELETE)
         }
         
         task.resume()
