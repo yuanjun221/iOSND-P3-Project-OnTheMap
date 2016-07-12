@@ -310,7 +310,7 @@
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="nameCell" rowHeight="90" id="Dy7-2T-fhB" customClass="OTMDetailNameTableViewCell" customModule="OnTheMap" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="113.5" width="600" height="90"/>
+                                        <rect key="frame" x="0.0" y="114" width="600" height="90"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Dy7-2T-fhB" id="W7k-hL-vj7">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="90"/>
@@ -354,7 +354,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="mapViewCell" rowHeight="244" id="sGV-ET-bg3" customClass="OTMDetailMapViewTableViewCell" customModule="OnTheMap" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="203.5" width="600" height="244"/>
+                                        <rect key="frame" x="0.0" y="204" width="600" height="244"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sGV-ET-bg3" id="m0i-f7-0uX">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="244"/>
@@ -395,22 +395,22 @@
                                             <outlet property="mapView" destination="0aU-o0-EYS" id="g41-lf-f6c"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="urlCell" id="hm8-e2-aEa" customClass="OTMDetailUrlTableViewCell" customModule="OnTheMap" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="447.5" width="600" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="urlCell" id="hm8-e2-aEa" customClass="OTMDetailUrlTableViewCell" customModule="OnTheMap" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="448" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hm8-e2-aEa" id="wXU-Ub-Tzs">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xz5-iz-lCX">
-                                                    <rect key="frame" x="20" y="12" width="560" height="20"/>
+                                                    <rect key="frame" x="20" y="12" width="547" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.20392156859999999" green="0.23529411759999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="xz5-iz-lCX" secondAttribute="trailing" constant="12" id="C5D-8b-Biz"/>
+                                                <constraint firstItem="xz5-iz-lCX" firstAttribute="trailing" secondItem="wXU-Ub-Tzs" secondAttribute="trailingMargin" constant="8" id="C5D-8b-Biz"/>
                                                 <constraint firstItem="xz5-iz-lCX" firstAttribute="centerY" secondItem="wXU-Ub-Tzs" secondAttribute="centerY" id="Lgc-qb-g4B"/>
                                                 <constraint firstItem="xz5-iz-lCX" firstAttribute="leading" secondItem="wXU-Ub-Tzs" secondAttribute="leadingMargin" constant="12" id="Xky-oQ-sY6"/>
                                             </constraints>
@@ -426,8 +426,12 @@
                             </activityIndicatorView>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="b6o-ff-O7U">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <items>
-                                    <navigationItem id="EZ8-AU-uHw"/>
+                                    <navigationItem id="EZ8-AU-uHw">
+                                        <barButtonItem key="backBarButtonItem" title=" " id="68a-rH-zPc"/>
+                                    </navigationItem>
                                 </items>
                             </navigationBar>
                         </subviews>
@@ -445,11 +449,52 @@
                     <connections>
                         <outlet property="activityIndicator" destination="iqD-SJ-icB" id="iar-k0-uUE"/>
                         <outlet property="tableView" destination="Msv-bj-pjL" id="fRc-YZ-kXu"/>
+                        <segue destination="qEZ-Lh-C3o" kind="show" identifier="pushWebView" id="sU4-yh-uq9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EiO-8R-taA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3092" y="131"/>
+        </scene>
+        <!--Web View Controller-->
+        <scene sceneID="Cnj-eO-qbr">
+            <objects>
+                <viewController id="qEZ-Lh-C3o" customClass="OTMWebViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oPI-AJ-0wP"/>
+                        <viewControllerLayoutGuide type="bottom" id="E3v-gV-Ips"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="CHG-h3-zu8">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Cl-92-2qg">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="6Cl-92-2qg" firstAttribute="height" secondItem="CHG-h3-zu8" secondAttribute="height" id="LsS-yM-FS1"/>
+                            <constraint firstItem="6Cl-92-2qg" firstAttribute="centerY" secondItem="CHG-h3-zu8" secondAttribute="centerY" id="teU-FJ-vJ3"/>
+                            <constraint firstItem="6Cl-92-2qg" firstAttribute="centerX" secondItem="CHG-h3-zu8" secondAttribute="centerX" id="xt5-Wa-XfQ"/>
+                            <constraint firstItem="6Cl-92-2qg" firstAttribute="width" secondItem="CHG-h3-zu8" secondAttribute="width" id="z65-M5-ymy"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="tI9-QP-lLS">
+                        <barButtonItem key="rightBarButtonItem" title="●●●" id="4Oi-DH-aKf" userLabel="Action Button">
+                            <connections>
+                                <action selector="actionButtonPressed:" destination="qEZ-Lh-C3o" id="9LZ-r7-ZpN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="webView" destination="6Cl-92-2qg" id="o76-BE-Usf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kq0-OD-DPz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3766" y="131"/>
         </scene>
         <!--Post Navigation Controller-->
         <scene sceneID="XoU-Jd-kut">
@@ -759,7 +804,7 @@
         <image name="Unkown" width="64" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="nGZ-iX-8dQ"/>
-        <segue reference="oNY-qf-0er"/>
+        <segue reference="qk2-2s-jZa"/>
+        <segue reference="heX-39-LWh"/>
     </inferredMetricsTieBreakers>
 </document>

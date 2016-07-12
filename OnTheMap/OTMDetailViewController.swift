@@ -17,6 +17,7 @@ class OTMDetailViewController: UIViewController {
         return OTMClient.sharedInstance().studentsInfo[studentIndex]
     }
     private var isDeleted: Bool = false
+    private var urlRequest: NSURLRequest?
     var onDismiss: ((sender: UIViewController) -> Void)!
     
     @IBOutlet weak var tableView: UITableView!
@@ -33,6 +34,7 @@ extension OTMDetailViewController {
         tableView.dataSource = self
         
         navigationController?.hidesBarsOnSwipe = false
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
         
         if studentInfo.uniqueKey == OTMClient.sharedInstance().userUniqueKey {
             let deleteButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: #selector(deleteButtonPressed))
@@ -49,6 +51,13 @@ extension OTMDetailViewController {
         super.viewWillDisappear(animated)
         if isDeleted {
             onDismiss(sender: self)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "pushWebView" {
+            let webViewController = segue.destinationViewController as! OTMWebViewController
+            webViewController.urlRequest = urlRequest!
         }
     }
     
@@ -92,15 +101,6 @@ extension OTMDetailViewController: UITableViewDelegate {
         }
     }
     
-    func tableView(tableView: UITableView, shouldHighlightRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        switch (indexPath.section, indexPath.row) {
-        case (2, 0):
-            return true
-        default:
-            return false
-        }
-    }
-    
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 10.0
@@ -112,7 +112,38 @@ extension OTMDetailViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 5.0
     }
+    
+    func tableView(tableView: UITableView, shouldHighlightRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        switch (indexPath.section, indexPath.row) {
+        case (2, 0):
+            return true
+        default:
+            return false
+        }
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == 2 && indexPath.row == 0 {
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            
+            var urlString = studentInfo.mediaURL
+            
+            if urlString.lowercaseString.hasPrefix("http://") || urlString.lowercaseString.hasPrefix("https://") {
+            } else {
+                urlString = "http://\(urlString)"
+            }
+            
+            guard let url = NSURL(string: urlString) else {
+                presentAlertController(WithTitle: "Invalid URL", message: "\(urlString) is not a valid url", ForHostViewController: self)
+                return
+            }
+            
+            urlRequest = NSURLRequest(URL: url)
+            performSegueWithIdentifier("pushWebView", sender: tableView)
 
+        }
+    }
+    
 }
 
 
