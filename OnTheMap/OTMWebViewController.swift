@@ -19,7 +19,7 @@ class OTMWebViewController: UIViewController {
 extension OTMWebViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationController?.hidesBarsOnSwipe = true
         navigationItem.title = urlRequest.URL?.host
     }
     
@@ -35,7 +35,10 @@ extension OTMWebViewController {
 extension OTMWebViewController {
     
     @IBAction func actionButtonPressed(sender: AnyObject) {
-        let alertController = UIAlertController(title: "Open With Safari?", message: nil, preferredStyle: .ActionSheet)
+        let attributedTitle = NSAttributedString(string: "Open With Safari", attributes: [NSFontAttributeName: UIFont.systemFontOfSize(18.0, weight: UIFontWeightMedium)])
+        let alertController = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
+        alertController.setValue(attributedTitle, forKey: "_attributedTitle")
+        
         let okAction = UIAlertAction(title: "OK", style: .Default) { okAction in
             UIApplication.sharedApplication().openURL(self.urlRequest.URL!)
         }

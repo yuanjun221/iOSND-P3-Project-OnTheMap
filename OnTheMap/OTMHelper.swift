@@ -15,8 +15,22 @@ func presentAlertController(WithTitle title: String?, message: String?, ForHostV
     hostViewController.presentViewController(alertController, animated: true, completion: nil)
 }
 
+func presentAlertControllerWhileLogoutForhostViewController(host: UIViewController, completionHandlerForConfirmAction: () -> Void) {
+    let alertController = UIAlertController(title: "Confirm Logout", message: "Do you want to log out?", preferredStyle: .Alert)
+    let logoutAction = UIAlertAction(title: "Logout", style: .Destructive) { logoutAction in
+        completionHandlerForConfirmAction()
+    }
+    let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+    alertController.addAction(logoutAction)
+    alertController.addAction(cancelAction)
+    host.presentViewController(alertController, animated: true, completion: nil)
+}
 
-
+func setTabBarItemsEnabled(indicator: Bool, ForTabBarController tabBarController: UITabBarController) {
+    for item in tabBarController.tabBar.items! {
+        item.enabled = !indicator
+    }
+}
 
 
 

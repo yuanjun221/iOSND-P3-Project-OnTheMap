@@ -32,7 +32,7 @@ class OTMClient : NSObject {
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             func sendError(errorMessage: String) {
-                let error = NSError(domain: "taskForGETMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
+                let error = NSError(domain: "taskForGETMethod", code: -2001, userInfo:[NSLocalizedDescriptionKey : errorMessage])
                 completionHandlerForGET(result: nil, error: error)
             }
             
@@ -151,9 +151,24 @@ class OTMClient : NSObject {
     func taskForDELETEMethod(method: String, parameters: [String: AnyObject], host: HostIdentifier, completionHandlerForDELETE: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
         request.HTTPMethod = "DELETE"
-        request.addValue("\(HTTPHeaderValues.ParseApplicationID)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseApplicationID)")
-        request.addValue("\(HTTPHeaderValues.ParseRESTApiKey)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseRESTApiKey)")
         
+        switch host {
+        case .Udacity:
+            var xsrfCookie: NSHTTPCookie? = nil
+            let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+            for cookie in sharedCookieStorage.cookies! {
+                if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+            }
+            if let xsrfCookie = xsrfCookie {
+                request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+            }
+        case .Parse:
+            request.addValue("\(HTTPHeaderValues.ParseApplicationID)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseApplicationID)")
+            request.addValue("\(HTTPHeaderValues.ParseRESTApiKey)", forHTTPHeaderField: "\(HTTPHeaderKeys.ParseRESTApiKey)")
+        default:
+            break
+        }
+
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             func sendError(errorMessage: String) {
                 let error = NSError(domain: "taskForDELETEMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
@@ -170,7 +185,16 @@ class OTMClient : NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForDELETE)
+            var targetData = data
+            
+            switch host {
+            case .Udacity:
+                targetData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            default:
+                break
+            }
+            
+            self.convertDataWithCompletionHandler(targetData, completionHandlerForConvertData: completionHandlerForDELETE)
         }
         
         task.resume()
@@ -242,6 +266,7 @@ class OTMClient : NSObject {
             let queryItem = NSURLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
+
         return components.URL!
     }
     

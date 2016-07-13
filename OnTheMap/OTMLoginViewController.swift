@@ -13,7 +13,7 @@ import UIKit
 class OTMLoginViewController: UIViewController {
     
     // MARK: Properties
-    private var isSocialLoginViewHidden = false
+    private var isSocialLoginViewHidden = true
     private var iscredentialLoginViewShifted = false
     private var isViewWating = false
     
@@ -46,7 +46,7 @@ extension OTMLoginViewController {
         super.viewWillAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
         loginButton.layer.cornerRadius = 4.0
-        hideSocialLoginViewBy(isSocialLoginViewHidden)
+        socialLoginViewBottom.constant = 45
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -149,6 +149,15 @@ extension OTMLoginViewController {
             }
         }
     }
+    
+    @IBAction func signUpPressed(sender: AnyObject) {
+        
+        let urlString = OTMClient.Urls.UdacitySignUpUrl
+        let url = NSURL(string: urlString)!
+        
+        UIApplication.sharedApplication().openURL(url)
+    }
+    
         
     func setUIEnabled(enabled: Bool) {
         isViewWating = !enabled

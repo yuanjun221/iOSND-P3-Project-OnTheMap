@@ -60,10 +60,6 @@ extension OTMDetailViewController {
             webViewController.urlRequest = urlRequest!
         }
     }
-    
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
-    }
 }
 
 

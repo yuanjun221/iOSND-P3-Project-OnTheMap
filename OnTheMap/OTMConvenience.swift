@@ -14,7 +14,7 @@ extension OTMClient {
     
     func loginWithCredential(username: String, password: String, completionHandlerForLogin: (success: Bool, error: NSError?, errorMessage: String?) -> Void) {
         let method: String = Methods.Session
-        let parameters: [String: AnyObject] = [:]
+        let parameters = [String: AnyObject]()
         let jsonBody = "{\"\(JsonBodyKeys.Udacity)\": {\"\(JsonBodyKeys.Username)\": \"\(username)\", \"\(JsonBodyKeys.Password)\": \"\(password)\"}}"
 
         taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Udacity) { (results, error) in
@@ -43,6 +43,20 @@ extension OTMClient {
             
             OTMClient.sharedInstance().userUniqueKey = key
             completionHandlerForLogin(success: true, error: nil, errorMessage: nil)
+        }
+    }
+    
+    func logoutOfUdacity(completionHandlerForLogout: (success: Bool, error: NSError?) -> Void) {
+        let method: String = Methods.Session
+        let parameters = [String: AnyObject]()
+        
+        taskForDELETEMethod(method, parameters: parameters, host: .Udacity) { (results, error) in
+            guard error == nil else {
+                completionHandlerForLogout(success: false, error: error)
+                return
+            }
+            
+            completionHandlerForLogout(success: true, error: nil)
         }
     }
     
@@ -133,11 +147,18 @@ extension OTMClient {
     func getUserImageUrlWithStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForImageUrl: (result: NSURL?, error: NSError?) -> Void) {
         var mutableMethod: String = Methods.UserUniqueKey
         mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.UniqueKey, withValue: studentInfo.uniqueKey)!
-        let parameters: [String: AnyObject] = [:]
+        let parameters = [String: AnyObject]()
         
         taskForGETMethod(mutableMethod, parameters: parameters, host: .Udacity) { (results, error) in
             guard error == nil else {
-                completionHandlerForImageUrl(result: nil, error: error)
+                
+                if error!.code == -2001 {
+                    let modifiedUserInfo = [NSLocalizedDescriptionKey: "\(error!.localizedDescription) User unique key '\(studentInfo.uniqueKey)' might be invalid."]
+                    let modifiedError = NSError(domain: error!.domain, code: error!.code, userInfo: modifiedUserInfo)
+                    completionHandlerForImageUrl(result: nil, error: modifiedError)
+                } else {
+                    completionHandlerForImageUrl(result: nil, error: error)
+                }
                 return
             }
             
@@ -150,6 +171,11 @@ extension OTMClient {
             
             guard let imageUrlString = user[ResponseKeys.ImageUrl] as? String else {
                 completionHandlerForImageUrl(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.ImageUrl)' in \(user)"]))
+                return
+            }
+            
+            if !imageUrlString.hasPrefix("//robohash.org/udacity-") {
+                completionHandlerForImageUrl(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid image url: '\(imageUrlString)'"]))
                 return
             }
             

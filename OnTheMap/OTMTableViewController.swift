@@ -17,6 +17,9 @@ class OTMTableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var logoutButton: UIBarButtonItem!
+    
+    @IBOutlet weak var pinButton: UIBarButtonItem!
 }
 
 
@@ -67,6 +70,12 @@ extension OTMTableViewController {
     
     @IBAction func pinButtonPressed(sender: AnyObject) {
         performSegueWithIdentifier("pinOnMap", sender: sender)
+    }
+    
+    @IBAction func logoutButtonPressed(sender: AnyObject) {
+        presentAlertControllerWhileLogoutForhostViewController(self) {
+            self.logoutOfUdacity()
+        }
     }
 }
 
@@ -185,6 +194,28 @@ extension OTMTableViewController {
         }
     }
     
+    func logoutOfUdacity() {
+        setViewWatingWhileLogout(true)
+        
+        OTMClient.sharedInstance().logoutOfUdacity { (success, error) in
+            
+            performUIUpdatesOnMain {
+                self.setViewWatingWhileLogout(false)
+            }
+            
+            if success {
+                performUIUpdatesOnMain {
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }
+            } else {
+                print(error!.localizedDescription)
+                performUIUpdatesOnMain {
+                    presentAlertController(WithTitle: "Logout Failed.", message: "Connection timed out.", ForHostViewController: self)
+                }
+            }
+        }
+    }
+    
     func setViewWaiting(indicator: Bool) {
         UIView.animateWithDuration(0.25) {
             self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
@@ -192,6 +223,16 @@ extension OTMTableViewController {
             self.refreshButton.enabled = !indicator
         }
         indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    }
+    
+    func setViewWatingWhileLogout(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.logoutButton.enabled = !indicator
+            self.pinButton.enabled = !indicator
+            setTabBarItemsEnabled(indicator, ForTabBarController: self.tabBarController!)
+        }
+        setViewWaiting(indicator)
+        
     }
     
 }

@@ -135,6 +135,10 @@ extension OTMClient {
         static let AddressComponents = "address_components"
         static let ShortName = "short_name"
     }
+    
+    struct Urls {
+        static let UdacitySignUpUrl = "https://www.udacity.com/account/auth#!/signup"
+    }
 }
 
 extension OTMClient {

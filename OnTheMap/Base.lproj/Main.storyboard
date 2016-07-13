@@ -81,6 +81,9 @@
                                         <state key="normal" title="Don't have an account? Sign Up!">
                                             <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="signUpPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="q9i-u3-iWI"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2hZ-Xl-B3l" userLabel="LoginButton">
                                         <rect key="frame" x="20" y="269" width="560" height="42"/>
@@ -265,6 +268,9 @@
                         <barButtonItem key="backBarButtonItem" title=" " id="U2t-y4-YWk"/>
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="GzH-V3-Bl6">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="logoutButtonPressed:" destination="43c-KG-gL1" id="AjI-jk-tJ0"/>
+                            </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="refresh" id="IUq-bZ-Gh5">
@@ -283,7 +289,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="x0x-XY-YWt" id="qXf-kj-tmb"/>
+                        <outlet property="logoutButton" destination="GzH-V3-Bl6" id="G9P-td-uDI"/>
                         <outlet property="mapView" destination="V0u-W2-XJI" id="FpG-Ou-aOV"/>
+                        <outlet property="pinButton" destination="awd-X5-1e0" id="fwG-Dn-fJr"/>
                         <outlet property="refreshButton" destination="IUq-bZ-Gh5" id="5BI-V4-8RA"/>
                         <segue destination="BZR-Ug-DOh" kind="presentation" identifier="pinOnMap" id="heX-39-LWh"/>
                         <segue destination="RsD-xj-GSY" kind="show" identifier="pushDetailView" id="qk2-2s-jZa"/>
@@ -341,7 +349,7 @@
                                                 <constraint firstItem="mq7-b3-Mtf" firstAttribute="top" secondItem="W7k-hL-vj7" secondAttribute="topMargin" constant="18" id="Wpf-8c-czH"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="9NG-Ic-kbc" secondAttribute="bottom" constant="10" id="g2o-On-gWR"/>
                                                 <constraint firstItem="t7O-mZ-KAM" firstAttribute="centerY" secondItem="W7k-hL-vj7" secondAttribute="centerY" id="mxw-dA-ZXd"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="mq7-b3-Mtf" secondAttribute="trailing" constant="37" id="oUu-me-EDh"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="mq7-b3-Mtf" secondAttribute="trailing" priority="999" constant="37" id="oUu-me-EDh"/>
                                                 <constraint firstItem="t7O-mZ-KAM" firstAttribute="leading" secondItem="W7k-hL-vj7" secondAttribute="leadingMargin" constant="12" id="q74-cu-W0d"/>
                                                 <constraint firstItem="mq7-b3-Mtf" firstAttribute="leading" secondItem="W7k-hL-vj7" secondAttribute="leadingMargin" constant="95" id="t5A-uv-6sX"/>
                                                 <constraint firstItem="9NG-Ic-kbc" firstAttribute="leading" secondItem="W7k-hL-vj7" secondAttribute="leadingMargin" constant="95" id="tsE-t8-hJD"/>
@@ -470,7 +478,7 @@
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Cl-92-2qg">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -727,6 +735,9 @@
                         <barButtonItem key="backBarButtonItem" title=" " id="vBs-v0-cEF"/>
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="0dF-FT-OdE">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="logoutButtonPressed:" destination="U1o-x1-9xs" id="8dN-ck-Fxy"/>
+                            </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="refresh" id="A7P-8N-zc3">
@@ -745,6 +756,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="ag5-EU-1OF" id="cu6-As-p9z"/>
+                        <outlet property="logoutButton" destination="0dF-FT-OdE" id="0mq-Nq-aHb"/>
+                        <outlet property="pinButton" destination="Iie-H3-zdO" id="gjN-A5-a3l"/>
                         <outlet property="refreshButton" destination="A7P-8N-zc3" id="ybd-sl-QCo"/>
                         <outlet property="tableView" destination="fTM-L7-pvn" id="Oiv-Ey-Szf"/>
                         <segue destination="BZR-Ug-DOh" kind="presentation" identifier="pinOnMap" id="oNY-qf-0er"/>
@@ -804,7 +817,7 @@
         <image name="Unkown" width="64" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qk2-2s-jZa"/>
-        <segue reference="heX-39-LWh"/>
+        <segue reference="nGZ-iX-8dQ"/>
+        <segue reference="oNY-qf-0er"/>
     </inferredMetricsTieBreakers>
 </document>
