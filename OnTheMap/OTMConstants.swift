@@ -6,9 +6,13 @@
 //  Copyright © 2016年 Jun.Yuan. All rights reserved.
 //
 
+// MARK: - Constants
 extension OTMClient {
     
+    // MARK:- API Constants
     struct Constants {
+        
+        // MARK: URL Components
         static let ApiScheme = "https"
         
         static let UdacityApiHost = "www.udacity.com"
@@ -23,35 +27,42 @@ extension OTMClient {
         static let RobohashApiHost = "robohash.org"
     }
     
+    // MARK:- Methods
     struct Methods {
-        // MARK: Udacity Methods
+        
+        // MARK: Udacity API Methods
         static let Session = "/session"
-        static let UserUniqueKey = "/users/_key"
+        static let UserUniqueKey = "/users/{key}"
         
-        // MARK: Parse Methods
+        // MARK: Parse API Methods
         static let StudentLocation = "/classes/StudentLocation"
-        static let StudentLocationObjectId = "/classes/StudentLocation/_objectId"
+        static let StudentLocationObjectId = "/classes/StudentLocation/{objectId}"
         
-        // MARK: Google Maps Methods
+        // MARK: Google Maps API Methods
         static let GeoCode = "/geocode/json"
     }
     
+    // MARK:- Request Header Keys
     struct HTTPHeaderKeys {
         static let ParseApplicationID = "X-Parse-Application-Id"
         static let ParseRESTApiKey = "X-Parse-REST-API-Key"
     }
     
+    // MARK:- Request Header Values
     struct HTTPHeaderValues {
         static let ParseApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let ParseRESTApiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     }
     
+    // MARK:- URL Keys
     struct URLKeys {
-        static let UniqueKey = "_key"
-        static let ObjectId = "_objectId"
+        static let UniqueKey = "{key}"
+        static let ObjectId = "{objectId}"
     }
     
+    // MARK:- Parameter Keys
     struct ParameterKeys {
+        
         // MARK: Udacity Parameter Keys
         static let Username = "username"
         static let Password = "password"
@@ -72,7 +83,9 @@ extension OTMClient {
         static let Size = "size"
     }
     
+    // MARK:- Parameter Values
     struct ParameterValues {
+        
         // MARK: Parse Parameter Values
         static var Limit = "10"
         static let UniqueKeyPair = "{\"uniqueKey\":\"_key\"}"
@@ -87,14 +100,19 @@ extension OTMClient {
         static let Size150 = "150x150"
     }
     
+    // MARK:- JSON Body Keys
     struct JsonBodyKeys {
+        
+        // MARK: Udacity
         static let Udacity = "udacity"
         static let Username = "username"
         static let Password = "password"
         
+        // MARK: Facebook
         static let FacebookMobile = "facebook_mobile"
         static let AccessToken = "access_token"
         
+        // MARK: Parse
         static let UniqueKey = "uniqueKey"
         static let FirstName = "firstName"
         static let LastName = "lastName"
@@ -104,8 +122,10 @@ extension OTMClient {
         static let Longitude = "longitude"
     }
     
+    // MARK:- JSON Response Keys
     struct ResponseKeys {
-        // MARK: Udacity Response Keys
+        
+        // MARK: Udacity Authorization
         static let Account = "account"
         static let Session = "session"
         static let Key = "key"
@@ -113,12 +133,12 @@ extension OTMClient {
         static let StatusCode = "status"
         static let Error = "error"
         
+        // MARK: Udacity Public User Info
         static let User = "user"
-        static let ImageUrl = "_image_url"
         static let UserFirstName = "first_name"
         static let UserLastName = "last_name"
         
-        // MARK: Parse Student Information
+        // MARK: Parse Student Info
         static let CreatedAt = "createdAt"
         static let FirstName = "firstName"
         static let LastName = "lastName"
@@ -131,7 +151,7 @@ extension OTMClient {
         static let UpdatedAt = "updatedAt"
         static let StudentResults = "results"
         
-        // MARK: Google Maps Response Keys
+        // MARK: Google Maps
         static let ErrorMessage = "error_message"
         static let GeoCodeStatus = "status"
         static let GeoCodeResults = "results"
@@ -139,11 +159,14 @@ extension OTMClient {
         static let ShortName = "short_name"
     }
     
+    // MARK:- URL Constants
     struct Urls {
         static let UdacitySignUpUrl = "https://www.udacity.com/account/auth#!/signup"
     }
 }
 
+
+// MARK:- Host Indentifier
 extension OTMClient {
     
     enum HostIdentifier {

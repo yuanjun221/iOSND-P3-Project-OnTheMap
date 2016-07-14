@@ -12,7 +12,6 @@ class OTMPinNavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
-
+    
 }

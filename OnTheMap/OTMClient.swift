@@ -8,18 +8,36 @@
 
 import Foundation
 
+
+// MARK: - Properties
 class OTMClient : NSObject {
     
+    // MARK: Properties
     var session = NSURLSession.sharedSession()
     
     var userUniqueKey: String?
     var FBAccessToken: String?
     var studentsInfo = [OTMStudentInformation]()
     
+    // MARK: Initializers
     override init() {
         super.init()
     }
     
+    // MARK: Shared Instance
+    class func sharedInstance() -> OTMClient {
+        struct Singleton {
+            static var sharedInstance = OTMClient()
+        }
+        return Singleton.sharedInstance
+    }
+}
+
+
+// MARK: - Request Methods
+extension OTMClient {
+    
+    // MARK: GET Method
     func taskForGETMethod(method: String, parameters: [String: AnyObject], host: HostIdentifier, completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
@@ -69,6 +87,7 @@ class OTMClient : NSObject {
         return task
     }
     
+    // MARK: POST Method
     func taskForPOSTMethod(method: String, parameters: [String: AnyObject], jsonBody: String, host: HostIdentifier, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
@@ -119,6 +138,7 @@ class OTMClient : NSObject {
         return task
     }
     
+    // MARK: PUT Method
     func taskForPUTMethod(method: String, parameters: [String: AnyObject], jsonBody: String, host: HostIdentifier, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
         request.HTTPMethod = "PUT"
@@ -150,6 +170,7 @@ class OTMClient : NSObject {
         return task
     }
     
+    // MARK: DELETE Method
     func taskForDELETEMethod(method: String, parameters: [String: AnyObject], host: HostIdentifier, completionHandlerForDELETE: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: otmURLFromParameters(parameters, withHost: host, pathExtension: method))
         request.HTTPMethod = "DELETE"
@@ -170,7 +191,7 @@ class OTMClient : NSObject {
         default:
             break
         }
-
+        
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             func sendError(errorMessage: String) {
                 let error = NSError(domain: "taskForDELETEMethod", code: 1, userInfo:[NSLocalizedDescriptionKey : errorMessage])
@@ -203,6 +224,7 @@ class OTMClient : NSObject {
         return task
     }
     
+    // MARK: GET Image Data
     func taskForGETImageData(url: NSURL, completionHandlerForGETImageData: (imageData: NSData?, error: NSError?) -> Void) -> NSURLSessionTask {
         let request = NSURLRequest(URL: url)
         
@@ -232,8 +254,11 @@ class OTMClient : NSObject {
         task.resume()
         return task
     }
-    
-    
+}
+
+
+// MARK: - Helper Methods
+extension OTMClient {
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
         var parsedResult: AnyObject!
         do {
@@ -261,14 +286,14 @@ class OTMClient : NSObject {
             components.host = Constants.RobohashApiHost
             components.path = pathExtension ?? ""
         }
-    
+        
         components.queryItems = [NSURLQueryItem]()
         
         for (key, value) in parameters {
             let queryItem = NSURLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
-
+        
         return components.URL!
     }
     
@@ -279,12 +304,4 @@ class OTMClient : NSObject {
             return nil
         }
     }
-    
-    class func sharedInstance() -> OTMClient {
-        struct Singleton {
-            static var sharedInstance = OTMClient()
-        }
-        return Singleton.sharedInstance
-    }
-    
 }

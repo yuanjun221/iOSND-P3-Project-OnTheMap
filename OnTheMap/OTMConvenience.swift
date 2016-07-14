@@ -10,8 +10,11 @@ import Foundation
 import UIKit
 import CoreLocation
 
+
+// MARK: - Request Method Convenience
 extension OTMClient {
     
+    // MARK: Login With Udacity Credential
     func loginWithUdacityCredential(username username: String, password: String, completionHandlerForLogin: (success: Bool, error: NSError?, errorMessage: String?) -> Void) {
         let method: String = Methods.Session
         let parameters = [String: AnyObject]()
@@ -47,6 +50,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Logout of Udacity
     func logoutOfUdacity(completionHandlerForLogout: (success: Bool, error: NSError?) -> Void) {
         let method: String = Methods.Session
         let parameters = [String: AnyObject]()
@@ -61,6 +65,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Login With Facebook Authentication
     func loginWithFacebookAuthentication(accessToken token: String, completionHandlerForLogin: (success: Bool, error: NSError?, errorMessage: String?) -> Void) {
         let method: String = Methods.Session
         let parameters = [String: AnyObject]()
@@ -95,6 +100,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Get Students Information
     func getStudentsInformation(completionHandlerForStudentsInformation: (result: [OTMStudentInformation]?, error: NSError?) -> Void) {
         let method = Methods.StudentLocation
         let parameters: [String: AnyObject] = [
@@ -119,6 +125,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Get Country Code
     func getCountryCodeWithStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForCountryCode: (result: String?, error: NSError?) -> Void) {
         
         let method = Methods.GeoCode
@@ -179,6 +186,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Get Avatar Image
     func getAvatarImageWithUniqueKey(uniqueKey: String, completionHandlerForAvatarImage: (image: UIImage?, error: NSError?) -> Void) {
         
         let urlExtension = "/udacity-\(uniqueKey)"
@@ -210,6 +218,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Get User Name
     func getUserNameWithUniqueKey(uniqueKey: String, completionHandlerForUserName:(result:(String, String)?, error: NSError?) -> Void) {
         var mutableMethod: String = Methods.UserUniqueKey
         mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.UniqueKey, withValue: uniqueKey)!
@@ -242,6 +251,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Query Student Info
     func queryStudentInfoWithUniqueKey(key: String, completionHandlerForStudentInfo: (result: OTMStudentInformation?, error: NSError?) -> Void) {
         let method = Methods.StudentLocation
         let parameters: [String: AnyObject] = [
@@ -275,6 +285,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Delete User Info
     func deleteStudentInfoWithObjectId(objectId: String, completionHandlerForDeleteStudentInfo: (success: Bool, error: NSError?) -> Void) {
         var mutableMethod: String = Methods.StudentLocationObjectId
         mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.ObjectId, withValue: objectId)!
@@ -290,6 +301,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Post Student Location
     func postStudentLocation(WithUniqueKey uniqueKey: String, name: (String, String), mapString: String, mediaUrl: String, coordinate: CLLocationCoordinate2D, completionHandlerForPostStudentLocation: (success: Bool, error: NSError?) -> Void) {
         let method: String = Methods.StudentLocation
         let parameters = [String: AnyObject]()
@@ -305,6 +317,7 @@ extension OTMClient {
         }
     }
     
+    // MARK: Put Student Location
     func putStudentLocation(WithStudentInfo studentInfo: OTMStudentInformation, mapString: String, mediaUrl: String, coordinate: CLLocationCoordinate2D, completionHandlerForPutStudentLocation: (success: Bool, error: NSError?) -> Void) {
         var mutableMethod: String = Methods.StudentLocationObjectId
         mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.ObjectId, withValue: studentInfo.objectID)!

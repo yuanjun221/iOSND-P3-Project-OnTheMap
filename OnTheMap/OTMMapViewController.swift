@@ -13,16 +13,17 @@ import MapKit
 // MARK: - View Controller Properties
 class OTMMapViewController: UIViewController {
     
+    // Properties
     var studentsInfo: [OTMStudentInformation] {
         return OTMClient.sharedInstance().studentsInfo
     }
     
+    // Outlets
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var pinButton: UIBarButtonItem!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var logoutButton: UIBarButtonItem!
-    
 }
 
 
@@ -99,9 +100,30 @@ extension OTMMapViewController {
 }
 
 
+// MARK: - View Response Behavior
+extension OTMMapViewController {
+    func setViewWaiting(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
+            self.mapView.alpha = indicator ? 0.6 : 1.0
+            self.refreshButton.enabled = !indicator
+        }
+        indicator ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+    }
+    
+    func setViewWatingWhileLogout(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.logoutButton.enabled = !indicator
+            self.pinButton.enabled = !indicator
+            setTabBarItemsEnabled(indicator, ForTabBarController: self.tabBarController!)
+        }
+        setViewWaiting(indicator)
+    }
+}
+
+
 // MARK: - Buttons Action
 extension OTMMapViewController {
-    
     @IBAction func refresh(sender: AnyObject) {
         getStudentsInformation()
     }
@@ -118,7 +140,7 @@ extension OTMMapViewController {
 }
 
 
-// MARK: - MKMapViewDelegate
+// MARK: - MKMapView Delegate
 extension OTMMapViewController: MKMapViewDelegate {
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
@@ -144,7 +166,7 @@ extension OTMMapViewController: MKMapViewDelegate {
 }
 
 
-// MARK: - Get Students Information
+// MARK: - Network Request
 extension OTMMapViewController {
     func getStudentsInformation() {
         if !mapView.annotations.isEmpty {
@@ -243,24 +265,4 @@ extension OTMMapViewController {
             }
         }
     }
-    
-    func setViewWaiting(indicator: Bool) {
-        UIView.animateWithDuration(0.25) {
-            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
-            self.mapView.alpha = indicator ? 0.6 : 1.0
-            self.refreshButton.enabled = !indicator
-        }
-        indicator ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-    }
-    
-    func setViewWatingWhileLogout(indicator: Bool) {
-        UIView.animateWithDuration(0.25) {
-            self.logoutButton.enabled = !indicator
-            self.pinButton.enabled = !indicator
-            setTabBarItemsEnabled(indicator, ForTabBarController: self.tabBarController!)
-        }
-        setViewWaiting(indicator)
-        
-    }
-    
 }

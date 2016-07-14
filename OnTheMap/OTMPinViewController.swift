@@ -13,23 +13,23 @@ import CoreLocation
 
 // MARK: - View Controller Properties
 class OTMPinViewController: UIViewController, CLLocationManagerDelegate {
-
-    @IBOutlet weak var urlTextField: UITextField!
-    @IBOutlet var searchBar: UISearchBar!
     
-    @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var urlInputView: UIView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
+    // MARK: Properties
     var onDismiss: ((sender: UIViewController) -> Void)!
     
     private var dismissButton: UIBarButtonItem!
     private var searchButton: UIBarButtonItem!
-
+    
     private var annotation = MKPointAnnotation()
     private var currentValidMapString: String!
     private var coordinate: CLLocationCoordinate2D?
-
+    
+    // MARK: Outlets
+    @IBOutlet weak var urlTextField: UITextField!
+    @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var urlInputView: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 }
 
 
@@ -114,14 +114,26 @@ extension OTMPinViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
-    
+}
+
+
+// MARK: - View Response Behavior
+extension OTMPinViewController {
+    func setViewWaiting(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
+            self.mapView.alpha = indicator ? 0.6 : 1.0
+            self.navigationItem.rightBarButtonItem?.enabled = !indicator
+            self.urlTextField.enabled = !indicator
+        }
+        indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    }
 }
 
 
 // MARK: - Buttons Action
 extension OTMPinViewController {
     @IBAction func dismissPressed(sender: AnyObject) {
-        
         if urlTextField.isFirstResponder() {
             urlTextField.resignFirstResponder()
         }
@@ -136,7 +148,6 @@ extension OTMPinViewController {
         
         searchBar.becomeFirstResponder()
     }
-
 }
 
 
@@ -162,6 +173,36 @@ extension OTMPinViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        geoCodeAddress()
+    }
+}
+
+
+// MARK: - TextField Delegate
+extension OTMPinViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        uploadInfo()
+        return true
+    }
+}
+
+
+// MARK: - Search Display Controller Table View Delegate & Data Source
+extension OTMPinViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+}
+
+
+// MARK: - Network Request
+extension OTMPinViewController {
+    func geoCodeAddress() {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(searchBar.text!, inRegion: nil) { (placemarks, error) in
             guard error == nil else {
@@ -182,7 +223,7 @@ extension OTMPinViewController: UISearchBarDelegate {
                 return
             }
             
-            self.currentValidMapString = searchBar.text!
+            self.currentValidMapString = self.searchBar.text!
             
             UIView.animateWithDuration(0.25) {
                 self.annotation.coordinate = location.coordinate
@@ -198,36 +239,10 @@ extension OTMPinViewController: UISearchBarDelegate {
                 self.mapView.regionThatFits(coordinateRegion)
                 self.mapView.setRegion(coordinateRegion, animated: true)
             }
-            
         }
     }
-}
-
-
-// MARK: - TextField Delegate
-extension OTMPinViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        queryUserInfo()
-        return true
-    }
-}
-
-
-extension OTMPinViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return UITableViewCell()
-    }
-    
-}
-
-
-extension OTMPinViewController {
-    func queryUserInfo() {
+    func uploadInfo() {
         guard let coordinate = coordinate else {
             presentAlertController(WithTitle:"Empty Location", message: "Please specify a location First.", ForHostViewController: self)
             return
@@ -338,15 +353,4 @@ extension OTMPinViewController {
             }
         }
     }
-    
-    func setViewWaiting(indicator: Bool) {
-        UIView.animateWithDuration(0.25) {
-            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
-            self.mapView.alpha = indicator ? 0.6 : 1.0
-            self.navigationItem.rightBarButtonItem?.enabled = !indicator
-            self.urlTextField.enabled = !indicator
-        }
-        indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
-    }
-    
 }

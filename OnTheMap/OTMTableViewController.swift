@@ -8,21 +8,25 @@
 
 import UIKit
 
+
+// MARK: - View Controller Properties
 class OTMTableViewController: UIViewController {
     
+    // MARK: Properties
     var studentsInfo: [OTMStudentInformation] {
         return OTMClient.sharedInstance().studentsInfo
     }
     
+    // MARK: Outlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var logoutButton: UIBarButtonItem!
-    
     @IBOutlet weak var pinButton: UIBarButtonItem!
 }
 
 
+// MARK: - View Controller Lifecycle
 extension OTMTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,10 +63,31 @@ extension OTMTableViewController {
         }
 
     }
-    
 }
 
 
+// MARK: - View Response Behavior
+extension OTMTableViewController {
+    func setViewWaiting(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
+            self.tableView.alpha = indicator ? 0.6 : 1.0
+            self.refreshButton.enabled = !indicator
+        }
+        indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    }
+    
+    func setViewWatingWhileLogout(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.logoutButton.enabled = !indicator
+            self.pinButton.enabled = !indicator
+            setTabBarItemsEnabled(indicator, ForTabBarController: self.tabBarController!)
+        }
+        setViewWaiting(indicator)
+    }
+}
+
+// MARK: - Buttons Action
 extension OTMTableViewController {
     @IBAction func refresh(sender: AnyObject) {
         getStudentsInformation()
@@ -80,6 +105,7 @@ extension OTMTableViewController {
 }
 
 
+// MARK: - Table View Delegate
 extension OTMTableViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("pushDetailView", sender: tableView)
@@ -87,6 +113,7 @@ extension OTMTableViewController: UITableViewDelegate {
 }
 
 
+// MARK: - Table View Data Source
 extension OTMTableViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -118,10 +145,10 @@ extension OTMTableViewController: UITableViewDataSource {
         
         return cell
     }
-    
 }
 
 
+// MARK: - Network Request
 extension OTMTableViewController {
     func getStudentsInformation() {
         self.setViewWaiting(true)
@@ -214,24 +241,4 @@ extension OTMTableViewController {
             }
         }
     }
-    
-    func setViewWaiting(indicator: Bool) {
-        UIView.animateWithDuration(0.25) {
-            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
-            self.tableView.alpha = indicator ? 0.6 : 1.0
-            self.refreshButton.enabled = !indicator
-        }
-        indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
-    }
-    
-    func setViewWatingWhileLogout(indicator: Bool) {
-        UIView.animateWithDuration(0.25) {
-            self.logoutButton.enabled = !indicator
-            self.pinButton.enabled = !indicator
-            setTabBarItemsEnabled(indicator, ForTabBarController: self.tabBarController!)
-        }
-        setViewWaiting(indicator)
-        
-    }
-    
 }

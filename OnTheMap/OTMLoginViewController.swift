@@ -47,7 +47,6 @@ extension OTMLoginViewController {
             OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
             loginWithFacebookAuthentication()
         }
-        
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -113,6 +112,31 @@ extension OTMLoginViewController {
 }
 
 
+// MARK: - View Response Behavior
+extension OTMLoginViewController {
+    func setViewWating(indicator: Bool) {
+        isViewWating = indicator
+        
+        emailTextField.enabled = !indicator
+        passwordTextField.enabled = !indicator
+        loginButton.enabled = !indicator
+        
+        let alpha = CGFloat(indicator ? 0.6 : 1.0)
+        UIView.animateWithDuration(0.25) {
+            self.emailTextField.alpha = alpha
+            self.passwordTextField.alpha = alpha
+            self.loginButton.alpha = alpha
+        }
+        loginButton.setTitle(indicator ? nil : "Login", forState: .Normal)
+        signUpButton.enabled = !indicator
+        toggleSocialViewButton.enabled = !indicator
+        facebookButton.enabled = !indicator
+        
+        indicator ? activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+    }
+}
+
+
 // MARK: - Buttons Action
 extension OTMLoginViewController {
 
@@ -157,44 +181,20 @@ extension OTMLoginViewController {
             OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
             
             self.loginWithFacebookAuthentication()
-
         }
     }
     
     
     @IBAction func signUpPressed(sender: AnyObject) {
-        
         let urlString = OTMClient.Urls.UdacitySignUpUrl
         let url = NSURL(string: urlString)!
         
         UIApplication.sharedApplication().openURL(url)
     }
-    
-    func setViewWating(indicator: Bool) {
-        isViewWating = indicator
-        
-        emailTextField.enabled = !indicator
-        passwordTextField.enabled = !indicator
-        loginButton.enabled = !indicator
-        
-        let alpha = CGFloat(indicator ? 0.6 : 1.0)
-        UIView.animateWithDuration(0.25) {
-            self.emailTextField.alpha = alpha
-            self.passwordTextField.alpha = alpha
-            self.loginButton.alpha = alpha
-        }
-        loginButton.setTitle(indicator ? nil : "Login", forState: .Normal)
-        signUpButton.enabled = !indicator
-        toggleSocialViewButton.enabled = !indicator
-        facebookButton.enabled = !indicator
-        
-        indicator ? activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-    }
-    
 }
 
 
-// MARK: - TextField Delegate
+// MARK: - Text Field Delegate
 extension OTMLoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -203,6 +203,7 @@ extension OTMLoginViewController: UITextFieldDelegate {
 }
 
 
+// MARK: - Network Request
 extension OTMLoginViewController {
     func loginWithUdacityAccount() {
         setViewWating(true)
@@ -229,7 +230,6 @@ extension OTMLoginViewController {
     }
     
     func loginWithFacebookAuthentication() {
-        
         guard let accessToken = OTMClient.sharedInstance().FBAccessToken else {
             presentAlertController(WithTitle: "Login Failed", message: "Cannot login with Facebook Account", ForHostViewController: self)
             return

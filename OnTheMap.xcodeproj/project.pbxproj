@@ -95,8 +95,6 @@
 		BF3AB86C1D221D0000BD318B /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
-				BF3AB86D1D221D0000BD318B /* AppDelegate.swift */,
-				BF3AB87F1D24E6BA00BD318B /* GCDBlackBox.swift */,
 				BF3AB88A1D26B31700BD318B /* Clients */,
 				BF3AB8871D26B26600BD318B /* View Controller */,
 				BF3AB8891D26B2F300BD318B /* Supporting Files */,
@@ -134,6 +132,8 @@
 		BF3AB8891D26B2F300BD318B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BF3AB86D1D221D0000BD318B /* AppDelegate.swift */,
+				BF3AB87F1D24E6BA00BD318B /* GCDBlackBox.swift */,
 				BF3BD58F1D37300D00E064EA /* FBSDKBridgingHeader.h */,
 				BF3BD58B1D372D9100E064EA /* FBSDKCoreKit.framework */,
 				BF3BD58C1D372D9100E064EA /* FBSDKLoginKit.framework */,

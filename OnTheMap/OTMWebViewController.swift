@@ -8,14 +8,19 @@
 
 import UIKit
 
+
+// MARK: - View Controller Properties
 class OTMWebViewController: UIViewController {
     
+    // MARK: Properties
     var urlRequest: NSURLRequest!
     
+    // MARK: Outlets
     @IBOutlet weak var webView: UIWebView!
 }
 
 
+// MARK: - View Controller Lifecycle
 extension OTMWebViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +37,8 @@ extension OTMWebViewController {
 }
 
 
+// MARK: - Buttons Action
 extension OTMWebViewController {
-    
     @IBAction func actionButtonPressed(sender: AnyObject) {
         let attributedTitle = NSAttributedString(string: "Open With Safari", attributes: [NSFontAttributeName: UIFont.systemFontOfSize(18.0, weight: UIFontWeightMedium)])
         let alertController = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)

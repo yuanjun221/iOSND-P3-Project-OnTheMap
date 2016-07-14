@@ -10,22 +10,28 @@ import UIKit
 import MapKit
 import CoreLocation
 
+
+// MARK: - View Controller Properties
 class OTMDetailViewController: UIViewController {
     
+    // MARK: Properties
     var studentIndex: Int!
+    var onDismiss: ((sender: UIViewController) -> Void)!
+    
     private var studentInfo: OTMStudentInformation {
         return OTMClient.sharedInstance().studentsInfo[studentIndex]
     }
     private var isDeleted: Bool = false
     private var urlRequest: NSURLRequest?
-    var onDismiss: ((sender: UIViewController) -> Void)!
     
+    // MARK: Outlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
 }
 
 
+// MARK: - View Controller Lifecycle
 extension OTMDetailViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +69,20 @@ extension OTMDetailViewController {
 }
 
 
+// MARK: - View Response Behavior
+extension OTMDetailViewController {
+    func setViewWaiting(indicator: Bool) {
+        UIView.animateWithDuration(0.25) {
+            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
+            self.tableView.alpha = indicator ? 0.6 : 1.0
+            self.navigationItem.rightBarButtonItem?.enabled = !indicator
+        }
+        indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    }
+}
+
+
+// MARK: - Buttons Action
 extension OTMDetailViewController {
     func deleteButtonPressed() {
         let alertTitle = "Delete Information"
@@ -84,8 +104,8 @@ extension OTMDetailViewController {
 }
 
 
+// MARK: - Table View Delegate
 extension OTMDetailViewController: UITableViewDelegate {
-    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
@@ -143,6 +163,7 @@ extension OTMDetailViewController: UITableViewDelegate {
 }
 
 
+// MARK: - Table View Data Source
 extension OTMDetailViewController: UITableViewDataSource {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 3
@@ -199,10 +220,10 @@ extension OTMDetailViewController: UITableViewDataSource {
             return UITableViewCell()
         }
     }
-    
 }
 
 
+// MARK: - Network Request
 extension OTMDetailViewController {
     func getAvatarImageForNameCell(nameCell: OTMDetailNameTableViewCell) {
         OTMClient.sharedInstance().getAvatarImageWithUniqueKey(studentInfo.uniqueKey) { (image, error) in
@@ -272,14 +293,4 @@ extension OTMDetailViewController {
 
         }
     }
-    
-    func setViewWaiting(indicator: Bool) {
-        UIView.animateWithDuration(0.25) {
-            self.view.backgroundColor = indicator ? UIColor.blackColor() : UIColor.whiteColor()
-            self.tableView.alpha = indicator ? 0.6 : 1.0
-            self.navigationItem.rightBarButtonItem?.enabled = !indicator
-        }
-        indicator ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
-    }
-
 }

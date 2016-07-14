@@ -42,6 +42,7 @@ struct OTMStudentInformation {
 
     }
     
+    // MARK: Generate Students Information Array
     static func studentsInformationFromResults(results: [[String: AnyObject]]) -> [OTMStudentInformation] {
         var studentsInformation = [OTMStudentInformation]()
         
