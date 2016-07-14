@@ -15,7 +15,7 @@ import CoreLocation
 class OTMPinViewController: UIViewController, CLLocationManagerDelegate {
     
     // MARK: Properties
-    var onDismiss: ((sender: UIViewController) -> Void)!
+    var onDismiss: (() -> Void)!
     
     private var dismissButton: UIBarButtonItem!
     private var searchButton: UIBarButtonItem!
@@ -318,7 +318,7 @@ extension OTMPinViewController {
             if success {
                 performUIUpdatesOnMain {
                     self.dismissViewControllerAnimated(true) {
-                        self.onDismiss(sender: self)
+                        self.onDismiss()
                     }
                 }
             } else {
@@ -341,7 +341,7 @@ extension OTMPinViewController {
             if success {
                 performUIUpdatesOnMain {
                     self.dismissViewControllerAnimated(true) {
-                        self.onDismiss(sender: self)
+                        self.onDismiss()
                     }
                 }
             } else {

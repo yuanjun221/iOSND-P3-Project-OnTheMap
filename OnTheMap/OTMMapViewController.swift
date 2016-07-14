@@ -18,7 +18,7 @@ class OTMMapViewController: UIViewController {
         return OTMClient.sharedInstance().studentsInfo
     }
     var loginType: OTMClient.LoginType!
-    var onDismiss: ((sender: UIViewController) -> Void)!
+    var onDismiss: (() -> Void)!
     
     // Outlets
     @IBOutlet weak var mapView: MKMapView!
@@ -37,6 +37,10 @@ extension OTMMapViewController {
         mapView.delegate = self
         if studentsInfo.isEmpty {
             getStudentsInformation()
+        } else {
+            mapView.removeAnnotations(mapView.annotations)
+            let annotations = annotationsFromStudentsInfo(studentsInfo)
+            mapView.addAnnotations(annotations)
         }
     }
     
@@ -59,7 +63,7 @@ extension OTMMapViewController {
         if segue.identifier == OTMClient.SegueId.PinOnMap {
             let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
             let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
-            pinViewController.onDismiss = { sender in
+            pinViewController.onDismiss = {
                 self.getStudentsInformation()
             }
         }
@@ -67,7 +71,7 @@ extension OTMMapViewController {
         if segue.identifier == OTMClient.SegueId.PushDetailView {
             let detailViewController = segue.destinationViewController as! OTMDetailViewController
             detailViewController.studentIndex = ((sender as! MKAnnotationView).annotation as! OTMMKPointAnnotation).studentIndex
-            detailViewController.onDismiss = { sender in
+            detailViewController.onDismiss = {
                 self.getStudentsInformation()
             }
         }
@@ -256,15 +260,14 @@ extension OTMMapViewController {
             }
             
             if success {
-                switch self.loginType! {
-                case .Facebook:
-                    self.onDismiss(sender: self)
-                default:
-                    break
-                }
-                
                 performUIUpdatesOnMain {
                     self.dismissViewControllerAnimated(true, completion: nil)
+                    switch self.loginType! {
+                    case .Facebook:
+                        self.onDismiss()
+                    default:
+                        break
+                    }
                 }
             } else {
                 print(error!.localizedDescription)

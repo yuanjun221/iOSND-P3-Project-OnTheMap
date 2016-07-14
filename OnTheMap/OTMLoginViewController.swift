@@ -16,7 +16,7 @@ class OTMLoginViewController: UIViewController {
     private var isSocialLoginViewHidden = true
     private var iscredentialLoginViewShifted = false
     private var isViewWating = false
-    private var loginManager: FBSDKLoginManager!
+    private var loginManager = FBSDKLoginManager()
     
     // MARK: Outlets
     @IBOutlet weak var emailTextField: UITextField!
@@ -85,10 +85,10 @@ extension OTMLoginViewController {
         } else if segue.identifier == OTMClient.SegueId.FacebookLogin {
             mapViewController.loginType = .Facebook
             tableViewController.loginType = .Facebook
-            mapViewController.onDismiss = { sender in
+            mapViewController.onDismiss = {
                 self.loginManager.logOut()
             }
-            tableViewController.onDismiss = { sender in
+            tableViewController.onDismiss = {
                 self.loginManager.logOut()
             }
         }
@@ -188,7 +188,7 @@ extension OTMLoginViewController {
     }
     
     @IBAction func facebookButtonPressed(sender: AnyObject) {
-        loginManager = FBSDKLoginManager()
+        
         loginManager.logOut()
         let permissions = ["email"]
         loginManager.logInWithReadPermissions(permissions, fromViewController: self) { (result, error) in

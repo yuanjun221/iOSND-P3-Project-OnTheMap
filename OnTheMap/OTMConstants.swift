@@ -88,7 +88,7 @@ extension OTMClient {
         
         // MARK: Parse Parameter Values
         static var Limit = "10"
-        static let UniqueKeyPair = "{\"uniqueKey\":\"_key\"}"
+        static let UniqueKeyPair = "{\"uniqueKey\":\"{key}\"}"
         
         // MARK: Google Maps GeoCode Parameter Values
         static let Key = "AIzaSyBNUI5NM4Nv8Ejqit5rZRwP48nWqCDipvg"

@@ -16,7 +16,7 @@ class OTMDetailViewController: UIViewController {
     
     // MARK: Properties
     var studentIndex: Int!
-    var onDismiss: ((sender: UIViewController) -> Void)!
+    var onDismiss: (() -> Void)!
     
     private var studentInfo: OTMStudentInformation {
         return OTMClient.sharedInstance().studentsInfo[studentIndex]
@@ -56,7 +56,7 @@ extension OTMDetailViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         if isDeleted {
-            onDismiss(sender: self)
+            onDismiss()
         }
     }
     

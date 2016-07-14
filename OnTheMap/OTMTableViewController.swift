@@ -17,7 +17,7 @@ class OTMTableViewController: UIViewController {
         return OTMClient.sharedInstance().studentsInfo
     }
     var loginType: OTMClient.LoginType!
-    var onDismiss: ((sender: UIViewController) -> Void)!
+    var onDismiss: (() -> Void)!
     
     // MARK: Outlets
     @IBOutlet weak var tableView: UITableView!
@@ -51,7 +51,7 @@ extension OTMTableViewController {
         if segue.identifier == OTMClient.SegueId.PinOnMap {
             let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
             let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
-            pinViewController.onDismiss = { sender in
+            pinViewController.onDismiss = {
                 self.getStudentsInformation()
             }
         }
@@ -59,7 +59,7 @@ extension OTMTableViewController {
         if segue.identifier == OTMClient.SegueId.PushDetailView {
             let detailViewController = segue.destinationViewController as! OTMDetailViewController
             detailViewController.studentIndex = tableView.indexPathForSelectedRow?.row
-            detailViewController.onDismiss = { sender in
+            detailViewController.onDismiss = {
                 self.getStudentsInformation()
             }
         }
@@ -233,15 +233,14 @@ extension OTMTableViewController {
             }
             
             if success {
-                switch self.loginType! {
-                case .Facebook:
-                    self.onDismiss(sender: self)
-                default:
-                    break
-                }
-                
                 performUIUpdatesOnMain {
                     self.dismissViewControllerAnimated(true, completion: nil)
+                    switch self.loginType! {
+                    case .Facebook:
+                        self.onDismiss()
+                    default:
+                        break
+                    }
                 }
             } else {
                 print(error!.localizedDescription)
