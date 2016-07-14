@@ -179,84 +179,34 @@ extension OTMClient {
         }
     }
     
-    func getUserImageUrlWithStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForImageUrl: (result: NSURL?, error: NSError?) -> Void) {
-        var mutableMethod: String = Methods.UserUniqueKey
-        mutableMethod = subtituteKeyInString(mutableMethod, key: URLKeys.UniqueKey, withValue: studentInfo.uniqueKey)!
-        let parameters = [String: AnyObject]()
+    func getAvatarImageWithUniqueKey(uniqueKey: String, completionHandlerForAvatarImage: (image: UIImage?, error: NSError?) -> Void) {
         
-        taskForGETMethod(mutableMethod, parameters: parameters, host: .Udacity) { (results, error) in
+        let urlExtension = "/udacity-\(uniqueKey)"
+        let parameters: [String: AnyObject] = [ParameterKeys.Size: ParameterValues.Size150]
+        let imageUrl = otmURLFromParameters(parameters, withHost: .Robohash, pathExtension: urlExtension)
+
+        let errorDomain = "GetUserImage Parsing"
+        
+        OTMClient.sharedInstance().taskForGETImageData(imageUrl) { (data, error) in
             guard error == nil else {
-                
-                if error!.code == -2001 {
-                    let modifiedUserInfo = [NSLocalizedDescriptionKey: "\(error!.localizedDescription) User unique key '\(studentInfo.uniqueKey)' might be invalid."]
-                    let modifiedError = NSError(domain: error!.domain, code: error!.code, userInfo: modifiedUserInfo)
-                    completionHandlerForImageUrl(result: nil, error: modifiedError)
-                } else {
-                    completionHandlerForImageUrl(result: nil, error: error)
-                }
-                return
-            }
-            
-            let errorDomain = "getUserImage parsing"
-            
-            guard let user = results[ResponseKeys.User] as? [String: AnyObject] else {
-                completionHandlerForImageUrl(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.User)' in \(results)"]))
-                return
-            }
-            
-            guard let imageUrlString = user[ResponseKeys.ImageUrl] as? String else {
-                completionHandlerForImageUrl(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.ImageUrl)' in \(user)"]))
-                return
-            }
-            
-            if !imageUrlString.hasPrefix("//robohash.org/udacity-") {
-                completionHandlerForImageUrl(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid image url: '\(imageUrlString)'"]))
-                return
-            }
-            
-            let urlExtension = (imageUrlString as NSString).substringFromIndex(14)
-            let parameters: [String: AnyObject] = [ParameterKeys.Size: ParameterValues.Size150]
-            let imageUrl = self.otmURLFromParameters(parameters, withHost: .Robohash, pathExtension: urlExtension)
-            
-            completionHandlerForImageUrl(result: imageUrl, error: nil)
-        }
-    }
-    
-    func getAvatarImageWithStudentInfo(studentInfo: OTMStudentInformation, completionHandlerForAvatarImage: (image: UIImage?, error: NSError?) -> Void) {
-        OTMClient.sharedInstance().getUserImageUrlWithStudentInfo(studentInfo) { (url, error) in
-            guard error == nil else {
+                print(errorDomain + error!.localizedDescription)
                 completionHandlerForAvatarImage(image: nil, error: error)
                 return
             }
             
-            let errorDomain = "GetUserImage Parsing"
+            let errorDomain = "GetImageData Parsing"
             
-            guard let url = url else {
-                completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No url returned."]))
+            guard let data = data else {
+                completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No image data returned."]))
                 return
             }
             
-            OTMClient.sharedInstance().taskForGETImageData(url) { (data, error) in
-                guard error == nil else {
-                    print(errorDomain + error!.localizedDescription)
-                    completionHandlerForAvatarImage(image: nil, error: error)
-                    return
-                }
-                
-                let errorDomain = "GetImageData Parsing"
-                
-                guard let data = data else {
-                    completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No image data returned."]))
-                    return
-                }
-                
-                guard let image = UIImage(data: data) else {
-                    completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No image from image data."]))
-                    return
-                }
-                
-                completionHandlerForAvatarImage(image: image, error: nil)
+            guard let image = UIImage(data: data) else {
+                completionHandlerForAvatarImage(image: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No image from image data."]))
+                return
             }
+            
+            completionHandlerForAvatarImage(image: image, error: nil)
         }
     }
     

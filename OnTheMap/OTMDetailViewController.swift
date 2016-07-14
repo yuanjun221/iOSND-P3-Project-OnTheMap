@@ -205,19 +205,19 @@ extension OTMDetailViewController: UITableViewDataSource {
 
 extension OTMDetailViewController {
     func getAvatarImageForNameCell(nameCell: OTMDetailNameTableViewCell) {
-        OTMClient.sharedInstance().getAvatarImageWithStudentInfo(studentInfo) { (image, error) in
+        OTMClient.sharedInstance().getAvatarImageWithUniqueKey(studentInfo.uniqueKey) { (image, error) in
             let errorDomain = "Error occurred when getting avatar image: "
-                
+            
             guard error == nil else {
                 print(errorDomain + error!.localizedDescription)
                 return
             }
-                
+            
             guard let image = image else {
                 print(errorDomain + "No image returned.")
                 return
             }
-                
+            
             OTMClient.sharedInstance().studentsInfo[self.studentIndex].avatarImage = image
             
             performUIUpdatesOnMain {

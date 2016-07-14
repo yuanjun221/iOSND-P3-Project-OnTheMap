@@ -186,7 +186,7 @@ extension OTMMapViewController {
             let studentInfo = studentsInfo[index]
             
             if studentInfo.avatarImage == nil {
-                OTMClient.sharedInstance().getAvatarImageWithStudentInfo(studentInfo) { (image, error) in
+                OTMClient.sharedInstance().getAvatarImageWithUniqueKey(studentInfo.uniqueKey) { (image, error) in
                     let errorDomain = "Error occurred when getting avatar image: "
                     
                     guard error == nil else {
