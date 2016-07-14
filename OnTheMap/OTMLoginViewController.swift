@@ -79,10 +79,10 @@ extension OTMLoginViewController {
         let listNavigationController = tabBarController.viewControllers![1] as! OTMListNavigationController
         let tableViewController = listNavigationController.topViewController as! OTMTableViewController
         
-        if segue.identifier == "UdacityLogin" {
+        if segue.identifier == OTMClient.SegueId.UdacityLogin {
             mapViewController.loginType = .Udacity
             tableViewController.loginType = .Udacity
-        } else if segue.identifier == "FacebookLogin" {
+        } else if segue.identifier == OTMClient.SegueId.FacebookLogin {
             mapViewController.loginType = .Facebook
             tableViewController.loginType = .Facebook
             mapViewController.onDismiss = { sender in
@@ -91,8 +91,6 @@ extension OTMLoginViewController {
             tableViewController.onDismiss = { sender in
                 self.loginManager.logOut()
             }
-                
-            
         }
     }
 }
@@ -244,7 +242,7 @@ extension OTMLoginViewController {
             
             if success {
                 performUIUpdatesOnMain {
-                    self.performSegueWithIdentifier("UdacityLogin", sender: sender)
+                    self.performSegueWithIdentifier(OTMClient.SegueId.UdacityLogin, sender: sender)
                 }
                 
             } else {
@@ -271,7 +269,7 @@ extension OTMLoginViewController {
             
             if success {
                 performUIUpdatesOnMain {
-                    self.performSegueWithIdentifier("FacebookLogin", sender: sender)
+                    self.performSegueWithIdentifier(OTMClient.SegueId.FacebookLogin, sender: sender)
                 }
                 
             } else {

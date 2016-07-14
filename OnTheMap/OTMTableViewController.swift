@@ -48,7 +48,7 @@ extension OTMTableViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "pinOnMap" {
+        if segue.identifier == OTMClient.SegueId.PinOnMap {
             let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
             let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
             pinViewController.onDismiss = { sender in
@@ -56,7 +56,7 @@ extension OTMTableViewController {
             }
         }
         
-        if segue.identifier == "pushDetailView" {
+        if segue.identifier == OTMClient.SegueId.PushDetailView {
             let detailViewController = segue.destinationViewController as! OTMDetailViewController
             detailViewController.studentIndex = tableView.indexPathForSelectedRow?.row
             detailViewController.onDismiss = { sender in
@@ -97,7 +97,7 @@ extension OTMTableViewController {
     }
     
     @IBAction func pinButtonPressed(sender: AnyObject) {
-        performSegueWithIdentifier("pinOnMap", sender: sender)
+        performSegueWithIdentifier(OTMClient.SegueId.PinOnMap, sender: sender)
     }
     
     @IBAction func logoutButtonPressed(sender: AnyObject) {
@@ -111,7 +111,7 @@ extension OTMTableViewController {
 // MARK: - Table View Delegate
 extension OTMTableViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("pushDetailView", sender: tableView)
+        performSegueWithIdentifier(OTMClient.SegueId.PushDetailView, sender: tableView)
     }
 }
 
@@ -126,7 +126,7 @@ extension OTMTableViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let studentInfo = studentsInfo[indexPath.row]
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("tableCell") as! OTMTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(OTMClient.TableCellId.TableCell) as! OTMTableViewCell
         
         cell.nameLabel.text = "\(studentInfo.firstName) \(studentInfo.lastName)"
         cell.urlLabel.text = studentInfo.mediaURL
@@ -233,15 +233,15 @@ extension OTMTableViewController {
             }
             
             if success {
+                switch self.loginType! {
+                case .Facebook:
+                    self.onDismiss(sender: self)
+                default:
+                    break
+                }
+                
                 performUIUpdatesOnMain {
-                    self.dismissViewControllerAnimated(true) {
-                        switch self.loginType! {
-                        case .Facebook:
-                            self.onDismiss(sender: self)
-                        default:
-                            break
-                        }
-                    }
+                    self.dismissViewControllerAnimated(true, completion: nil)
                 }
             } else {
                 print(error!.localizedDescription)

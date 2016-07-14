@@ -163,6 +163,23 @@ extension OTMClient {
     struct Urls {
         static let UdacitySignUpUrl = "https://www.udacity.com/account/auth#!/signup"
     }
+    
+    // MARK: - Segue Identifier
+    struct SegueId {
+        static let UdacityLogin = "UdacityLogin"
+        static let FacebookLogin = "FacebookLogin"
+        static let PushDetailView = "pushDetailView"
+        static let PinOnMap = "pinOnMap"
+        static let PushWebView = "pushWebView"
+    }
+    
+    
+    struct TableCellId {
+        static let TableCell = "tableCell"
+        static let NameCell = "nameCell"
+        static let MapViewCell = "mapViewCell"
+        static let UrlCell = "urlCell"
+    }
 }
 
 

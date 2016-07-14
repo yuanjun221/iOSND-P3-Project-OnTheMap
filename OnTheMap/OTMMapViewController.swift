@@ -56,7 +56,7 @@ extension OTMMapViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "pinOnMap" {
+        if segue.identifier == OTMClient.SegueId.PinOnMap {
             let pinNavigationController = segue.destinationViewController as! OTMPinNavigationController
             let pinViewController = pinNavigationController.topViewController as! OTMPinViewController
             pinViewController.onDismiss = { sender in
@@ -64,7 +64,7 @@ extension OTMMapViewController {
             }
         }
         
-        if segue.identifier == "pushDetailView" {
+        if segue.identifier == OTMClient.SegueId.PushDetailView {
             let detailViewController = segue.destinationViewController as! OTMDetailViewController
             detailViewController.studentIndex = ((sender as! MKAnnotationView).annotation as! OTMMKPointAnnotation).studentIndex
             detailViewController.onDismiss = { sender in
@@ -132,7 +132,7 @@ extension OTMMapViewController {
     }
     
     @IBAction func pinButtonPressed(sender: AnyObject) {
-        performSegueWithIdentifier("pinOnMap", sender: sender)
+        performSegueWithIdentifier(OTMClient.SegueId.PinOnMap, sender: sender)
     }
     
     @IBAction func logoutButtonPressed(sender: AnyObject) {
@@ -163,7 +163,7 @@ extension OTMMapViewController: MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            performSegueWithIdentifier("pushDetailView", sender: view)
+            performSegueWithIdentifier(OTMClient.SegueId.PushDetailView, sender: view)
         }
     }
 }
@@ -256,15 +256,15 @@ extension OTMMapViewController {
             }
             
             if success {
+                switch self.loginType! {
+                case .Facebook:
+                    self.onDismiss(sender: self)
+                default:
+                    break
+                }
+                
                 performUIUpdatesOnMain {
-                    self.dismissViewControllerAnimated(true) {
-                        switch self.loginType! {
-                        case .Facebook:
-                            self.onDismiss(sender: self)
-                        default:
-                            break
-                        }
-                    }
+                    self.dismissViewControllerAnimated(true, completion: nil)
                 }
             } else {
                 print(error!.localizedDescription)

@@ -61,7 +61,7 @@ extension OTMDetailViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "pushWebView" {
+        if segue.identifier == OTMClient.SegueId.PushWebView {
             let webViewController = segue.destinationViewController as! OTMWebViewController
             webViewController.urlRequest = urlRequest!
         }
@@ -155,7 +155,7 @@ extension OTMDetailViewController: UITableViewDelegate {
             }
             
             urlRequest = NSURLRequest(URL: url)
-            performSegueWithIdentifier("pushWebView", sender: tableView)
+            performSegueWithIdentifier(OTMClient.SegueId.PushWebView, sender: tableView)
 
         }
     }
@@ -175,9 +175,9 @@ extension OTMDetailViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let nameCell = tableView.dequeueReusableCellWithIdentifier("nameCell") as! OTMDetailNameTableViewCell
-        let mapViewCell = tableView.dequeueReusableCellWithIdentifier("mapViewCell") as! OTMDetailMapViewTableViewCell
-        let urlCell = tableView.dequeueReusableCellWithIdentifier("urlCell") as! OTMDetailUrlTableViewCell
+        let nameCell = tableView.dequeueReusableCellWithIdentifier(OTMClient.TableCellId.NameCell) as! OTMDetailNameTableViewCell
+        let mapViewCell = tableView.dequeueReusableCellWithIdentifier(OTMClient.TableCellId.MapViewCell) as! OTMDetailMapViewTableViewCell
+        let urlCell = tableView.dequeueReusableCellWithIdentifier(OTMClient.TableCellId.UrlCell) as! OTMDetailUrlTableViewCell
         
         if let avatarImage = studentInfo.avatarImage {
             nameCell.avatarImageView.image = avatarImage
