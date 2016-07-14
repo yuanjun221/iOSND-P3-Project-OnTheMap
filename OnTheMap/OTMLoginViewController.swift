@@ -16,6 +16,7 @@ class OTMLoginViewController: UIViewController {
     private var isSocialLoginViewHidden = true
     private var iscredentialLoginViewShifted = false
     private var isViewWating = false
+    private var loginManager: FBSDKLoginManager!
     
     // MARK: Outlets
     @IBOutlet weak var emailTextField: UITextField!
@@ -45,7 +46,7 @@ extension OTMLoginViewController {
         
         if FBSDKAccessToken.currentAccessToken() != nil {
             OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
-            loginWithFacebookAuthentication()
+            loginWithFacebookAuthentication(self)
         }
     }
 
@@ -66,6 +67,33 @@ extension OTMLoginViewController {
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+
+        let tabBarController = segue.destinationViewController as! OTMTabBarController
+            
+        let mapNavigationController = tabBarController.viewControllers![0] as! OTMMapNavigationController
+        let mapViewController = mapNavigationController.topViewController as! OTMMapViewController
+        
+        let listNavigationController = tabBarController.viewControllers![1] as! OTMListNavigationController
+        let tableViewController = listNavigationController.topViewController as! OTMTableViewController
+        
+        if segue.identifier == "UdacityLogin" {
+            mapViewController.loginType = .Udacity
+            tableViewController.loginType = .Udacity
+        } else if segue.identifier == "FacebookLogin" {
+            mapViewController.loginType = .Facebook
+            tableViewController.loginType = .Facebook
+            mapViewController.onDismiss = { sender in
+                self.loginManager.logOut()
+            }
+            tableViewController.onDismiss = { sender in
+                self.loginManager.logOut()
+            }
+                
+            
+        }
     }
 }
 
@@ -157,12 +185,12 @@ extension OTMLoginViewController {
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             presentAlertController(WithTitle: "Login Failed", message: "Empty Email or Password.", ForHostViewController: self)
         } else {
-            loginWithUdacityAccount()
+            loginWithUdacityAccount(sender)
         }
     }
     
     @IBAction func facebookButtonPressed(sender: AnyObject) {
-        let loginManager = FBSDKLoginManager()
+        loginManager = FBSDKLoginManager()
         loginManager.logOut()
         let permissions = ["email"]
         loginManager.logInWithReadPermissions(permissions, fromViewController: self) { (result, error) in
@@ -180,7 +208,7 @@ extension OTMLoginViewController {
             
             OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
             
-            self.loginWithFacebookAuthentication()
+            self.loginWithFacebookAuthentication(sender)
         }
     }
     
@@ -205,7 +233,7 @@ extension OTMLoginViewController: UITextFieldDelegate {
 
 // MARK: - Network Request
 extension OTMLoginViewController {
-    func loginWithUdacityAccount() {
+    func loginWithUdacityAccount(sender: AnyObject) {
         setViewWating(true)
         
         OTMClient.sharedInstance().loginWithUdacityCredential(username: emailTextField.text!, password: passwordTextField.text!) { (success, error, errorMessage) in
@@ -216,8 +244,7 @@ extension OTMLoginViewController {
             
             if success {
                 performUIUpdatesOnMain {
-                    let tabBarController = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-                    self.presentViewController(tabBarController, animated: true, completion: nil)
+                    self.performSegueWithIdentifier("UdacityLogin", sender: sender)
                 }
                 
             } else {
@@ -229,7 +256,7 @@ extension OTMLoginViewController {
         }
     }
     
-    func loginWithFacebookAuthentication() {
+    func loginWithFacebookAuthentication(sender: AnyObject) {
         guard let accessToken = OTMClient.sharedInstance().FBAccessToken else {
             presentAlertController(WithTitle: "Login Failed", message: "Cannot login with Facebook Account", ForHostViewController: self)
             return
@@ -244,8 +271,7 @@ extension OTMLoginViewController {
             
             if success {
                 performUIUpdatesOnMain {
-                    let tabBarController = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-                    self.presentViewController(tabBarController, animated: true, completion: nil)
+                    self.performSegueWithIdentifier("FacebookLogin", sender: sender)
                 }
                 
             } else {

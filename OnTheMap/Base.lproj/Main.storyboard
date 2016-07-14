@@ -209,6 +209,8 @@
                         <outlet property="signUpButton" destination="8IW-Lb-5Wr" id="Z7D-s0-d2q"/>
                         <outlet property="socialLoginViewBottom" destination="ztt-dO-CFs" id="bkT-C3-rmC"/>
                         <outlet property="toggleSocialViewButton" destination="nCY-ph-5NY" id="7ZA-cp-CpI"/>
+                        <segue destination="9jG-E7-Z7j" kind="showDetail" identifier="UdacityLogin" id="wYO-Y1-KKL"/>
+                        <segue destination="9jG-E7-Z7j" kind="showDetail" identifier="FacebookLogin" id="juw-dI-YHl"/>
                     </connections>
                 </viewController>
                 <tapGestureRecognizer id="umA-G7-IjL">
@@ -223,7 +225,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="iEj-fp-cee">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarController" id="9jG-E7-Z7j" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarController" id="9jG-E7-Z7j" customClass="OTMTabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="FmO-6l-pry">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -774,7 +776,7 @@
         <!--Map Navigation Controller-->
         <scene sceneID="N4P-3U-CcW">
             <objects>
-                <navigationController hidesBarsOnSwipe="YES" id="Xiz-9c-a68" userLabel="Map Navigation Controller" sceneMemberID="viewController">
+                <navigationController hidesBarsOnSwipe="YES" id="Xiz-9c-a68" userLabel="Map Navigation Controller" customClass="OTMMapNavigationController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Map" image="Map" id="MVp-Aa-O8o"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="f0N-Lg-ZQY">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -793,7 +795,7 @@
         <!--List Navigation Controller-->
         <scene sceneID="9hT-E6-U5C">
             <objects>
-                <navigationController id="kss-L9-lpB" userLabel="List Navigation Controller" sceneMemberID="viewController">
+                <navigationController id="kss-L9-lpB" userLabel="List Navigation Controller" customClass="OTMListNavigationController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="List" image="List" id="JTW-Bj-4Ef"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="tKJ-pZ-baW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -821,6 +823,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="nGZ-iX-8dQ"/>
+        <segue reference="juw-dI-YHl"/>
         <segue reference="oNY-qf-0er"/>
     </inferredMetricsTieBreakers>
 </document>

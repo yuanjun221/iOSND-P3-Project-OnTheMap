@@ -9,7 +9,7 @@
 // MARK: - Constants
 extension OTMClient {
     
-    // MARK:- API Constants
+    // MARK: - API Constants
     struct Constants {
         
         // MARK: URL Components
@@ -27,7 +27,7 @@ extension OTMClient {
         static let RobohashApiHost = "robohash.org"
     }
     
-    // MARK:- Methods
+    // MARK: - Methods
     struct Methods {
         
         // MARK: Udacity API Methods
@@ -42,25 +42,25 @@ extension OTMClient {
         static let GeoCode = "/geocode/json"
     }
     
-    // MARK:- Request Header Keys
+    // MARK: - Request Header Keys
     struct HTTPHeaderKeys {
         static let ParseApplicationID = "X-Parse-Application-Id"
         static let ParseRESTApiKey = "X-Parse-REST-API-Key"
     }
     
-    // MARK:- Request Header Values
+    // MARK: - Request Header Values
     struct HTTPHeaderValues {
         static let ParseApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let ParseRESTApiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     }
     
-    // MARK:- URL Keys
+    // MARK: - URL Keys
     struct URLKeys {
         static let UniqueKey = "{key}"
         static let ObjectId = "{objectId}"
     }
     
-    // MARK:- Parameter Keys
+    // MARK: - Parameter Keys
     struct ParameterKeys {
         
         // MARK: Udacity Parameter Keys
@@ -83,7 +83,7 @@ extension OTMClient {
         static let Size = "size"
     }
     
-    // MARK:- Parameter Values
+    // MARK: - Parameter Values
     struct ParameterValues {
         
         // MARK: Parse Parameter Values
@@ -100,7 +100,7 @@ extension OTMClient {
         static let Size150 = "150x150"
     }
     
-    // MARK:- JSON Body Keys
+    // MARK: - JSON Body Keys
     struct JsonBodyKeys {
         
         // MARK: Udacity
@@ -122,7 +122,7 @@ extension OTMClient {
         static let Longitude = "longitude"
     }
     
-    // MARK:- JSON Response Keys
+    // MARK: - JSON Response Keys
     struct ResponseKeys {
         
         // MARK: Udacity Authorization
@@ -159,20 +159,27 @@ extension OTMClient {
         static let ShortName = "short_name"
     }
     
-    // MARK:- URL Constants
+    // MARK: - URL Constants
     struct Urls {
         static let UdacitySignUpUrl = "https://www.udacity.com/account/auth#!/signup"
     }
 }
 
 
-// MARK:- Host Indentifier
+// MARK: - Identifier
 extension OTMClient {
     
+    // MARK:- Host Indentifier
     enum HostIdentifier {
         case Udacity
         case Parse
         case Google
         case Robohash
+    }
+    
+    // MARK: - Login Type
+    enum LoginType {
+        case Udacity
+        case Facebook
     }
 }

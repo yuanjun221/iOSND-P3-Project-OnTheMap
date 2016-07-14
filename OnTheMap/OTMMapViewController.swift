@@ -17,6 +17,8 @@ class OTMMapViewController: UIViewController {
     var studentsInfo: [OTMStudentInformation] {
         return OTMClient.sharedInstance().studentsInfo
     }
+    var loginType: OTMClient.LoginType!
+    var onDismiss: ((sender: UIViewController) -> Void)!
     
     // Outlets
     @IBOutlet weak var mapView: MKMapView!
@@ -115,6 +117,7 @@ extension OTMMapViewController {
         UIView.animateWithDuration(0.25) {
             self.logoutButton.enabled = !indicator
             self.pinButton.enabled = !indicator
+            self.mapView.userInteractionEnabled = !indicator
             setTabBarItemsEnabled(indicator, ForTabBarController: self.tabBarController!)
         }
         setViewWaiting(indicator)
@@ -192,9 +195,8 @@ extension OTMMapViewController {
             
             OTMClient.sharedInstance().studentsInfo = studentsInfo
             
-            let annotations = self.annotationsFromStudentsInfo(studentsInfo)
-            
             performUIUpdatesOnMain {
+                let annotations = self.annotationsFromStudentsInfo(studentsInfo)
                 self.mapView.addAnnotations(annotations)
                 self.setViewWaiting(false)
             }
@@ -255,7 +257,14 @@ extension OTMMapViewController {
             
             if success {
                 performUIUpdatesOnMain {
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                    self.dismissViewControllerAnimated(true) {
+                        switch self.loginType! {
+                        case .Facebook:
+                            self.onDismiss(sender: self)
+                        default:
+                            break
+                        }
+                    }
                 }
             } else {
                 print(error!.localizedDescription)

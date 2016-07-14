@@ -16,6 +16,8 @@ class OTMTableViewController: UIViewController {
     var studentsInfo: [OTMStudentInformation] {
         return OTMClient.sharedInstance().studentsInfo
     }
+    var loginType: OTMClient.LoginType!
+    var onDismiss: ((sender: UIViewController) -> Void)!
     
     // MARK: Outlets
     @IBOutlet weak var tableView: UITableView!
@@ -81,6 +83,7 @@ extension OTMTableViewController {
         UIView.animateWithDuration(0.25) {
             self.logoutButton.enabled = !indicator
             self.pinButton.enabled = !indicator
+            self.tableView.userInteractionEnabled = !indicator
             setTabBarItemsEnabled(indicator, ForTabBarController: self.tabBarController!)
         }
         setViewWaiting(indicator)
@@ -231,7 +234,14 @@ extension OTMTableViewController {
             
             if success {
                 performUIUpdatesOnMain {
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                    self.dismissViewControllerAnimated(true) {
+                        switch self.loginType! {
+                        case .Facebook:
+                            self.onDismiss(sender: self)
+                        default:
+                            break
+                        }
+                    }
                 }
             } else {
                 print(error!.localizedDescription)

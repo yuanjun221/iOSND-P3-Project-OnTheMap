@@ -23,6 +23,9 @@
 		BF3AB8921D2900D400BD318B /* OTMTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */; };
 		BF3BD58D1D372D9100E064EA /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF3BD58B1D372D9100E064EA /* FBSDKCoreKit.framework */; };
 		BF3BD58E1D372D9100E064EA /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF3BD58C1D372D9100E064EA /* FBSDKLoginKit.framework */; };
+		BF3BD5911D37A67B00E064EA /* OTMTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3BD5901D37A67B00E064EA /* OTMTabBarController.swift */; };
+		BF3BD5931D37A6AD00E064EA /* OTMMapNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3BD5921D37A6AD00E064EA /* OTMMapNavigationController.swift */; };
+		BF3BD5951D37A6CB00E064EA /* OTMListNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3BD5941D37A6CB00E064EA /* OTMListNavigationController.swift */; };
 		BFB832751D313FCA00874181 /* OTMPinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */; };
 		BFFDF9481D33730200067999 /* OTMTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF9471D33730200067999 /* OTMTableViewCell.swift */; };
 		BFFDF9521D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */; };
@@ -53,6 +56,9 @@
 		BF3BD58B1D372D9100E064EA /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		BF3BD58C1D372D9100E064EA /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		BF3BD58F1D37300D00E064EA /* FBSDKBridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKBridgingHeader.h; sourceTree = "<group>"; };
+		BF3BD5901D37A67B00E064EA /* OTMTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTabBarController.swift; sourceTree = "<group>"; };
+		BF3BD5921D37A6AD00E064EA /* OTMMapNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMMapNavigationController.swift; sourceTree = "<group>"; };
+		BF3BD5941D37A6CB00E064EA /* OTMListNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMListNavigationController.swift; sourceTree = "<group>"; };
 		BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMPinNavigationController.swift; sourceTree = "<group>"; };
 		BFFDF9471D33730200067999 /* OTMTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewCell.swift; sourceTree = "<group>"; };
 		BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDetailMapViewTableViewCell.swift; sourceTree = "<group>"; };
@@ -106,15 +112,14 @@
 		BF3AB8871D26B26600BD318B /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
-				BFFDF9581D3375EB00067999 /* Sub View */,
 				BF3AB86F1D221D0000BD318B /* OTMLoginViewController.swift */,
 				BF3AB88B1D26B3B600BD318B /* OTMMapViewController.swift */,
 				BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */,
 				BFFDF94F1D3375CE00067999 /* OTMDetailViewController.swift */,
 				BFFDF9591D352F4F00067999 /* OTMWebViewController.swift */,
-				BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */,
 				BF249DC71D2CE4FA00FAF8AB /* OTMPinViewController.swift */,
-				BFFDF9471D33730200067999 /* OTMTableViewCell.swift */,
+				BF3BD5961D37D0C000E064EA /* HelperController */,
+				BFFDF9581D3375EB00067999 /* Sub View */,
 			);
 			name = "View Controller";
 			sourceTree = "<group>";
@@ -153,9 +158,21 @@
 			name = Clients;
 			sourceTree = "<group>";
 		};
+		BF3BD5961D37D0C000E064EA /* HelperController */ = {
+			isa = PBXGroup;
+			children = (
+				BF3BD5901D37A67B00E064EA /* OTMTabBarController.swift */,
+				BF3BD5921D37A6AD00E064EA /* OTMMapNavigationController.swift */,
+				BF3BD5941D37A6CB00E064EA /* OTMListNavigationController.swift */,
+				BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */,
+			);
+			name = HelperController;
+			sourceTree = "<group>";
+		};
 		BFFDF9491D33759700067999 /* Table View Cell */ = {
 			isa = PBXGroup;
 			children = (
+				BFFDF9471D33730200067999 /* OTMTableViewCell.swift */,
 				BFFDF94D1D3375CE00067999 /* OTMDetailNameTableViewCell.swift */,
 				BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */,
 				BFFDF94E1D3375CE00067999 /* OTMDetailUrlTableViewCell.swift */,
@@ -261,9 +278,12 @@
 				BFFDF9571D3375E200067999 /* OTMMKPointAnnotation.swift in Sources */,
 				BFB832751D313FCA00874181 /* OTMPinNavigationController.swift in Sources */,
 				BF3AB88E1D27A48B00BD318B /* OTMStudentInformation.swift in Sources */,
+				BF3BD5911D37A67B00E064EA /* OTMTabBarController.swift in Sources */,
 				BF3AB86E1D221D0000BD318B /* AppDelegate.swift in Sources */,
 				BF3AB88C1D26B3B600BD318B /* OTMMapViewController.swift in Sources */,
 				BFFDF9481D33730200067999 /* OTMTableViewCell.swift in Sources */,
+				BF3BD5951D37A6CB00E064EA /* OTMListNavigationController.swift in Sources */,
+				BF3BD5931D37A6AD00E064EA /* OTMMapNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
