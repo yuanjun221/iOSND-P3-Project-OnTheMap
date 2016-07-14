@@ -33,7 +33,6 @@ extension OTMDetailViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        navigationController?.hidesBarsOnSwipe = false
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
         
         if studentInfo.uniqueKey == OTMClient.sharedInstance().userUniqueKey {
@@ -44,6 +43,7 @@ extension OTMDetailViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.hidesBarsOnSwipe = false
         navigationItem.title = "\(studentInfo.firstName) \(studentInfo.lastName)"
     }
     

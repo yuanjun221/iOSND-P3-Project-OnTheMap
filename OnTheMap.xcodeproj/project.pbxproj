@@ -21,6 +21,8 @@
 		BF3AB88E1D27A48B00BD318B /* OTMStudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB88D1D27A48B00BD318B /* OTMStudentInformation.swift */; };
 		BF3AB8901D28D06500BD318B /* OTMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB88F1D28D06500BD318B /* OTMHelper.swift */; };
 		BF3AB8921D2900D400BD318B /* OTMTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */; };
+		BF3BD58D1D372D9100E064EA /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF3BD58B1D372D9100E064EA /* FBSDKCoreKit.framework */; };
+		BF3BD58E1D372D9100E064EA /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF3BD58C1D372D9100E064EA /* FBSDKLoginKit.framework */; };
 		BFB832751D313FCA00874181 /* OTMPinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */; };
 		BFFDF9481D33730200067999 /* OTMTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF9471D33730200067999 /* OTMTableViewCell.swift */; };
 		BFFDF9521D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */; };
@@ -48,6 +50,9 @@
 		BF3AB88D1D27A48B00BD318B /* OTMStudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMStudentInformation.swift; sourceTree = "<group>"; };
 		BF3AB88F1D28D06500BD318B /* OTMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMHelper.swift; sourceTree = "<group>"; };
 		BF3AB8911D2900D400BD318B /* OTMTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewController.swift; sourceTree = "<group>"; };
+		BF3BD58B1D372D9100E064EA /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		BF3BD58C1D372D9100E064EA /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		BF3BD58F1D37300D00E064EA /* FBSDKBridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKBridgingHeader.h; sourceTree = "<group>"; };
 		BFB832741D313FCA00874181 /* OTMPinNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMPinNavigationController.swift; sourceTree = "<group>"; };
 		BFFDF9471D33730200067999 /* OTMTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTableViewCell.swift; sourceTree = "<group>"; };
 		BFFDF94C1D3375CE00067999 /* OTMDetailMapViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDetailMapViewTableViewCell.swift; sourceTree = "<group>"; };
@@ -63,6 +68,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF3BD58E1D372D9100E064EA /* FBSDKLoginKit.framework in Frameworks */,
+				BF3BD58D1D372D9100E064EA /* FBSDKCoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +134,9 @@
 		BF3AB8891D26B2F300BD318B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BF3BD58F1D37300D00E064EA /* FBSDKBridgingHeader.h */,
+				BF3BD58B1D372D9100E064EA /* FBSDKCoreKit.framework */,
+				BF3BD58C1D372D9100E064EA /* FBSDKLoginKit.framework */,
 				BF3AB8791D221D0000BD318B /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -370,11 +380,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OnTheMap",
+				);
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yuanjun.OnTheMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = OnTheMap/FBSDKBridgingHeader.h;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -385,11 +400,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OnTheMap",
+				);
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yuanjun.OnTheMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = OnTheMap/FBSDKBridgingHeader.h;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

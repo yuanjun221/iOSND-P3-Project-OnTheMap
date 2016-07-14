@@ -11,7 +11,9 @@ import Foundation
 class OTMClient : NSObject {
     
     var session = NSURLSession.sharedSession()
+    
     var userUniqueKey: String?
+    var FBAccessToken: String?
     var studentsInfo = [OTMStudentInformation]()
     
     override init() {
@@ -37,7 +39,7 @@ class OTMClient : NSObject {
             }
             
             guard error == nil else {
-                sendError("There was an error with request: \(error!.description)")
+                sendError("There was an error with request: \(error!.localizedDescription)")
                 return
             }
             
@@ -92,7 +94,7 @@ class OTMClient : NSObject {
             }
             
             guard error == nil else {
-                sendError("There was an error with request: \(error!.description)")
+                sendError("There was an error with request: \(error!.localizedDescription)")
                 return
             }
             
@@ -132,7 +134,7 @@ class OTMClient : NSObject {
             }
             
             guard error == nil else {
-                sendError("There was an error with request: \(error!.description)")
+                sendError("There was an error with request: \(error!.localizedDescription)")
                 return
             }
             
@@ -176,7 +178,7 @@ class OTMClient : NSObject {
             }
             
             guard error == nil else {
-                sendError("There was an error with request: \(error!.description)")
+                sendError("There was an error with request: \(error!.localizedDescription)")
                 return
             }
             

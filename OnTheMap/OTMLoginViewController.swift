@@ -40,13 +40,20 @@ extension OTMLoginViewController {
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
+        socialLoginViewBottom.constant = 45
+        isSocialLoginViewHidden = true
+        
+        if FBSDKAccessToken.currentAccessToken() != nil {
+            OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
+            loginWithFacebookAuthentication()
+        }
+        
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
         loginButton.layer.cornerRadius = 4.0
-        socialLoginViewBottom.constant = 45
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -126,29 +133,34 @@ extension OTMLoginViewController {
         if emailTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             presentAlertController(WithTitle: "Login Failed", message: "Empty Email or Password.", ForHostViewController: self)
         } else {
-            setUIEnabled(false)
-            
-            OTMClient.sharedInstance().loginWithCredential(emailTextField.text!, password: passwordTextField.text!) { (success, error, errorMessage) in
-                performUIUpdatesOnMain {
-                    self.setUIEnabled(true)
-                }
-                
-                if success {
-                    performUIUpdatesOnMain {
-                        let tabBarController = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-                        self.presentViewController(tabBarController, animated: true, completion: nil)
-                    }
-
-                } else {
-                    print(error!.localizedDescription)
-                    performUIUpdatesOnMain {
-                        presentAlertController(WithTitle: "Login Failed", message: errorMessage!, ForHostViewController: self)
-                    }
-                    
-                }
-            }
+            loginWithUdacityAccount()
         }
     }
+    
+    @IBAction func facebookButtonPressed(sender: AnyObject) {
+        let loginManager = FBSDKLoginManager()
+        loginManager.logOut()
+        let permissions = ["email"]
+        loginManager.logInWithReadPermissions(permissions, fromViewController: self) { (result, error) in
+            
+            guard error == nil else {
+                print(error.localizedDescription)
+                presentAlertController(WithTitle: "Login Failed", message: "Cannot login with Facebook Account", ForHostViewController: self)
+                return
+            }
+            
+            if result.isCancelled {
+                print("User canceled.")
+                return
+            }
+            
+            OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
+            
+            self.loginWithFacebookAuthentication()
+
+        }
+    }
+    
     
     @IBAction func signUpPressed(sender: AnyObject) {
         
@@ -158,27 +170,27 @@ extension OTMLoginViewController {
         UIApplication.sharedApplication().openURL(url)
     }
     
+    func setViewWating(indicator: Bool) {
+        isViewWating = indicator
         
-    func setUIEnabled(enabled: Bool) {
-        isViewWating = !enabled
+        emailTextField.enabled = !indicator
+        passwordTextField.enabled = !indicator
+        loginButton.enabled = !indicator
         
-        emailTextField.enabled = enabled
-        passwordTextField.enabled = enabled
-        loginButton.enabled = enabled
-        
-        let alpha = CGFloat(enabled ? 1.0 : 0.6)
+        let alpha = CGFloat(indicator ? 0.6 : 1.0)
         UIView.animateWithDuration(0.25) {
             self.emailTextField.alpha = alpha
             self.passwordTextField.alpha = alpha
             self.loginButton.alpha = alpha
         }
-        loginButton.setTitle(enabled ? "Login" : nil, forState: .Normal)
-        signUpButton.enabled = enabled
-        toggleSocialViewButton.enabled = enabled
-        facebookButton.enabled = enabled
+        loginButton.setTitle(indicator ? nil : "Login", forState: .Normal)
+        signUpButton.enabled = !indicator
+        toggleSocialViewButton.enabled = !indicator
+        facebookButton.enabled = !indicator
         
-        !enabled ? activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+        indicator ? activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
     }
+    
 }
 
 
@@ -188,4 +200,62 @@ extension OTMLoginViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+}
+
+
+extension OTMLoginViewController {
+    func loginWithUdacityAccount() {
+        setViewWating(true)
+        
+        OTMClient.sharedInstance().loginWithUdacityCredential(username: emailTextField.text!, password: passwordTextField.text!) { (success, error, errorMessage) in
+            
+            performUIUpdatesOnMain {
+                self.setViewWating(false)
+            }
+            
+            if success {
+                performUIUpdatesOnMain {
+                    let tabBarController = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
+                    self.presentViewController(tabBarController, animated: true, completion: nil)
+                }
+                
+            } else {
+                print(error!.localizedDescription)
+                performUIUpdatesOnMain {
+                    presentAlertController(WithTitle: "Login Failed", message: errorMessage!, ForHostViewController: self)
+                }
+            }
+        }
+    }
+    
+    func loginWithFacebookAuthentication() {
+        
+        guard let accessToken = OTMClient.sharedInstance().FBAccessToken else {
+            presentAlertController(WithTitle: "Login Failed", message: "Cannot login with Facebook Account", ForHostViewController: self)
+            return
+        }
+        
+        self.setViewWating(true)
+        
+        OTMClient.sharedInstance().loginWithFacebookAuthentication(accessToken: accessToken) { (success, error, errorMessage) in
+            performUIUpdatesOnMain {
+                self.setViewWating(false)
+            }
+            
+            if success {
+                performUIUpdatesOnMain {
+                    let tabBarController = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
+                    self.presentViewController(tabBarController, animated: true, completion: nil)
+                }
+                
+            } else {
+                print(error!.localizedDescription)
+                performUIUpdatesOnMain {
+                    presentAlertController(WithTitle: "Login Failed", message: errorMessage!, ForHostViewController: self)
+                }
+            }
+        }
+        
+    }
+    
 }

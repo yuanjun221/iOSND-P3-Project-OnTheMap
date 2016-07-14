@@ -12,10 +12,11 @@ import CoreLocation
 
 extension OTMClient {
     
-    func loginWithCredential(username: String, password: String, completionHandlerForLogin: (success: Bool, error: NSError?, errorMessage: String?) -> Void) {
+    func loginWithUdacityCredential(username username: String, password: String, completionHandlerForLogin: (success: Bool, error: NSError?, errorMessage: String?) -> Void) {
         let method: String = Methods.Session
         let parameters = [String: AnyObject]()
         let jsonBody = "{\"\(JsonBodyKeys.Udacity)\": {\"\(JsonBodyKeys.Username)\": \"\(username)\", \"\(JsonBodyKeys.Password)\": \"\(password)\"}}"
+        // let jsonBody = [JsonBodyKeys.Udacity : [JsonBodyKeys.Username : username, JsonBodyKeys.Password : password]]
 
         taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Udacity) { (results, error) in
             
@@ -32,12 +33,12 @@ extension OTMClient {
             }
             
             guard let accountDictionary = results[ResponseKeys.Account] as? [String: AnyObject] else {
-                completionHandlerForLogin(success: false, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Account)' in \(results)"]), errorMessage: "Parse data from server failed.")
+                completionHandlerForLogin(success: false, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Account)' in \(results)"]), errorMessage: "Login failed.")
                 return
             }
             
             guard let key = accountDictionary[ResponseKeys.Key] as? String else {
-                completionHandlerForLogin(success: false, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Key)' in \(accountDictionary)"]), errorMessage: "Parse data from server failed.")
+                completionHandlerForLogin(success: false, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Key)' in \(accountDictionary)"]), errorMessage: "Login failed.")
                 return
             }
             
@@ -57,6 +58,40 @@ extension OTMClient {
             }
             
             completionHandlerForLogout(success: true, error: nil)
+        }
+    }
+    
+    func loginWithFacebookAuthentication(accessToken token: String, completionHandlerForLogin: (success: Bool, error: NSError?, errorMessage: String?) -> Void) {
+        let method: String = Methods.Session
+        let parameters = [String: AnyObject]()
+        let jsonBody = "{\"\(JsonBodyKeys.FacebookMobile)\": {\"\(JsonBodyKeys.AccessToken)\": \"\(token)\"}}"
+        
+        taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Udacity) { (results, error) in
+            guard error == nil else {
+                completionHandlerForLogin(success: false, error: error, errorMessage: "Connection timed out.")
+                return
+            }
+            
+            let errorDomain = "loginWithFacebookAuthentication"
+            
+            if let _ = results[ResponseKeys.StatusCode] as? Int, errorString = results[ResponseKeys.Error] as? String {
+                completionHandlerForLogin(success: false, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: errorString]), errorMessage: errorString)
+                return
+            }
+            
+            guard let accountDictionary = results[ResponseKeys.Account] as? [String: AnyObject] else {
+                completionHandlerForLogin(success: false, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Account)' in \(results)"]), errorMessage: "Login failed.")
+                return
+            }
+            
+            guard let key = accountDictionary[ResponseKeys.Key] as? String else {
+                completionHandlerForLogin(success: false, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not find key '\(ResponseKeys.Key)' in \(accountDictionary)"]), errorMessage: "Login failed.")
+                return
+            }
+            
+            OTMClient.sharedInstance().userUniqueKey = key
+            completionHandlerForLogin(success: true, error: nil, errorMessage: nil)
+            
         }
     }
     

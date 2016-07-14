@@ -92,6 +92,9 @@ extension OTMClient {
         static let Username = "username"
         static let Password = "password"
         
+        static let FacebookMobile = "facebook_mobile"
+        static let AccessToken = "access_token"
+        
         static let UniqueKey = "uniqueKey"
         static let FirstName = "firstName"
         static let LastName = "lastName"
