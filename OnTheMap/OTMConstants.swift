@@ -159,6 +159,14 @@ extension OTMClient {
         static let ShortName = "short_name"
     }
     
+    // MARK: ResponseValues
+    struct ResponseValues {
+        
+        // Google Maps
+        static let OK = "OK"
+        static let ZeroResults = "ZERO_RESULTS"
+    }
+    
     // MARK: - URL Constants
     struct Urls {
         static let UdacitySignUpUrl = "https://www.udacity.com/account/auth#!/signup"

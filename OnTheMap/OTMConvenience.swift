@@ -139,7 +139,7 @@ extension OTMClient {
         let errorDomain = "getCountryCode parsing"
         
         guard -90 ... 90 ~= studentInfo.latitude && -180 ... 180 ~= studentInfo.longitude else {
-            completionHandlerForCountryCode(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Parameters out of range: (lat: -90 to 90, log: -180 to 180) in \(studentInfo)"]))
+            completionHandlerForCountryCode(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Location coordinate: (\(studentInfo.latitude), \(studentInfo.longitude)) out of range: (-90 ~ +90, -180 ~ +180)."]))
             return
         }
         
@@ -154,7 +154,12 @@ extension OTMClient {
                 return
             }
             
-            guard stauts == "OK" else {
+            if stauts == ResponseValues.ZeroResults {
+                completionHandlerForCountryCode(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "No corresponding country code returned from location coordinate: (\(studentInfo.latitude), \(studentInfo.longitude))."]))
+                return
+            }
+            
+            guard stauts == ResponseValues.OK else {
                 guard let errorMessage = results[ResponseKeys.ErrorMessage] as? String else {
                     completionHandlerForCountryCode(result: nil, error: NSError(domain: errorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Server returned an error but could not find key '\(ResponseKeys.ErrorMessage)' in \(results)"]))
                     return
