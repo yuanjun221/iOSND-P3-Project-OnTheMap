@@ -203,8 +203,13 @@ extension OTMPinViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - Network Request
 extension OTMPinViewController {
     func geoCodeAddress() {
+        setViewWaiting(true)
+        
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(searchBar.text!, inRegion: nil) { (placemarks, error) in
+            
+            self.setViewWaiting(false)
+            
             guard error == nil else {
                 presentAlertController(WithTitle: "Cannot find the location.", message: nil, ForHostViewController: self)
                 print(error!.localizedDescription)
