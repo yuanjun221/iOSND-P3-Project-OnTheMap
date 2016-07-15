@@ -19,7 +19,7 @@ class OTMDetailViewController: UIViewController {
     var onDismiss: (() -> Void)!
     
     private var studentInfo: OTMStudentInformation {
-        return OTMClient.sharedInstance().studentsInfo[studentIndex]
+        return OTMModel.sharedInstance().studentsInfo[studentIndex]
     }
     private var isDeleted: Bool = false
     private var urlRequest: NSURLRequest?
@@ -41,7 +41,7 @@ extension OTMDetailViewController {
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
         
-        if studentInfo.uniqueKey == OTMClient.sharedInstance().userUniqueKey {
+        if studentInfo.uniqueKey == OTMModel.sharedInstance().userUniqueKey {
             let deleteButton = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: #selector(deleteButtonPressed))
             navigationItem.rightBarButtonItem = deleteButton
         }
@@ -239,7 +239,7 @@ extension OTMDetailViewController {
                 return
             }
             
-            OTMClient.sharedInstance().studentsInfo[self.studentIndex].avatarImage = image
+            OTMModel.sharedInstance().studentsInfo[self.studentIndex].avatarImage = image
             
             performUIUpdatesOnMain {
                 nameCell.avatarImageView.image = image
@@ -261,7 +261,7 @@ extension OTMDetailViewController {
                 return
             }
                 
-            OTMClient.sharedInstance().studentsInfo[self.studentIndex].countryCode = countryCode
+            OTMModel.sharedInstance().studentsInfo[self.studentIndex].countryCode = countryCode
             
             performUIUpdatesOnMain {
                 mapCell.flagImageView.image = UIImage(named: countryCode)

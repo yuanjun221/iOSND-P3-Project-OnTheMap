@@ -14,7 +14,7 @@ class OTMTableViewController: UIViewController {
     
     // MARK: Properties
     var studentsInfo: [OTMStudentInformation] {
-        return OTMClient.sharedInstance().studentsInfo
+        return OTMModel.sharedInstance().studentsInfo
     }
     var loginType: OTMClient.LoginType!
     var onDismiss: (() -> Void)!
@@ -171,7 +171,7 @@ extension OTMTableViewController {
                 return
             }
             
-            OTMClient.sharedInstance().studentsInfo = studentsInfo
+            OTMModel.sharedInstance().studentsInfo = studentsInfo
             performUIUpdatesOnMain {
                 self.setViewWaiting(false)
                 self.tableView.reloadData()
@@ -193,7 +193,7 @@ extension OTMTableViewController {
                 return
             }
             
-            OTMClient.sharedInstance().studentsInfo[indexPath.row].avatarImage = image
+            OTMModel.sharedInstance().studentsInfo[indexPath.row].avatarImage = image
             
             performUIUpdatesOnMain {
                 cell.avatarImageView.image = image
@@ -219,7 +219,7 @@ extension OTMTableViewController {
                 cell.flagImageView.image = UIImage(named: countryCode)
             }
             
-            OTMClient.sharedInstance().studentsInfo[indexPath.row].countryCode = countryCode
+            OTMModel.sharedInstance().studentsInfo[indexPath.row].countryCode = countryCode
         }
     }
     

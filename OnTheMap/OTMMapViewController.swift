@@ -15,7 +15,7 @@ class OTMMapViewController: UIViewController {
     
     // Properties
     var studentsInfo: [OTMStudentInformation] {
-        return OTMClient.sharedInstance().studentsInfo
+        return OTMModel.sharedInstance().studentsInfo
     }
     var loginType: OTMClient.LoginType!
     var onDismiss: (() -> Void)!
@@ -197,7 +197,7 @@ extension OTMMapViewController {
                 return
             }
             
-            OTMClient.sharedInstance().studentsInfo = studentsInfo
+            OTMModel.sharedInstance().studentsInfo = studentsInfo
             
             performUIUpdatesOnMain {
                 let annotations = self.annotationsFromStudentsInfo(studentsInfo)
@@ -227,7 +227,7 @@ extension OTMMapViewController {
                         return
                     }
                     
-                    OTMClient.sharedInstance().studentsInfo[index].avatarImage = image
+                    OTMModel.sharedInstance().studentsInfo[index].avatarImage = image
                 }
             }
             
@@ -244,7 +244,7 @@ extension OTMMapViewController {
                         return
                     }
                     
-                    OTMClient.sharedInstance().studentsInfo[index].countryCode = countryCode
+                    OTMModel.sharedInstance().studentsInfo[index].countryCode = countryCode
                 }
             }
         }

@@ -45,7 +45,7 @@ extension OTMClient {
                 return
             }
             
-            OTMClient.sharedInstance().userUniqueKey = key
+            OTMModel.sharedInstance().userUniqueKey = key
             completionHandlerForLogin(success: true, error: nil, errorMessage: nil)
         }
     }
@@ -94,7 +94,7 @@ extension OTMClient {
                 return
             }
             
-            OTMClient.sharedInstance().userUniqueKey = key
+            OTMModel.sharedInstance().userUniqueKey = key
             completionHandlerForLogin(success: true, error: nil, errorMessage: nil)
             
         }

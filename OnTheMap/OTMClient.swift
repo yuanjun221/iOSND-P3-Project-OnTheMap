@@ -13,11 +13,7 @@ import Foundation
 class OTMClient : NSObject {
     
     // MARK: Properties
-    var session = NSURLSession.sharedSession()
-    
-    var userUniqueKey: String?
-    var FBAccessToken: String?
-    var studentsInfo = [OTMStudentInformation]()
+    private var session = NSURLSession.sharedSession()
     
     // MARK: Initializers
     override init() {

@@ -45,7 +45,7 @@ extension OTMLoginViewController {
         isSocialLoginViewHidden = true
         
         if FBSDKAccessToken.currentAccessToken() != nil {
-            OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
+            OTMModel.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
             loginWithFacebookAuthentication(self)
         }
     }
@@ -204,7 +204,7 @@ extension OTMLoginViewController {
                 return
             }
             
-            OTMClient.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
+            OTMModel.sharedInstance().FBAccessToken = FBSDKAccessToken.currentAccessToken().tokenString
             
             self.loginWithFacebookAuthentication(sender)
         }
@@ -255,7 +255,7 @@ extension OTMLoginViewController {
     }
     
     func loginWithFacebookAuthentication(sender: AnyObject) {
-        guard let accessToken = OTMClient.sharedInstance().FBAccessToken else {
+        guard let accessToken = OTMModel.sharedInstance().FBAccessToken else {
             presentAlertController(WithTitle: "Login Failed", message: "Cannot login with Facebook Account", ForHostViewController: self)
             return
         }

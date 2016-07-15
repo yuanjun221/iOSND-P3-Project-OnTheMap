@@ -248,7 +248,7 @@ extension OTMPinViewController {
             return
         }
         
-        guard let uniqueKey = OTMClient.sharedInstance().userUniqueKey else {
+        guard let uniqueKey = OTMModel.sharedInstance().userUniqueKey else {
             presentAlertController(WithTitle:"No User Logged In", message: "Please check your loggin information.", ForHostViewController: self)
             return
         }
