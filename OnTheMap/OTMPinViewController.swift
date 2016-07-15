@@ -249,7 +249,7 @@ extension OTMPinViewController {
     
     func uploadInfo() {
         guard let coordinate = coordinate else {
-            presentAlertController(WithTitle:"Empty Location", message: "Please specify a location First.", ForHostViewController: self)
+            presentAlertController(WithTitle:"Empty Location", message: "Please specify a location First. Click top-right search button to search a location.", ForHostViewController: self)
             return
         }
         
