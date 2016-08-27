@@ -17,9 +17,9 @@ extension OTMClient {
         
         static let UdacityApiHost = "www.udacity.com"
         static let UdacityApiPath = "/api"
-        
-        static let ParseApiHost = "api.parse.com"
-        static let ParseApiPath = "/1"
+
+        static let ParseApiHost = "parse.udacity.com"
+        static let ParseApiPath = "/parse"
         
         static let GoogleMapsApiHost = "maps.googleapis.com"
         static let GoogleMapsApiPath = "/maps/api"

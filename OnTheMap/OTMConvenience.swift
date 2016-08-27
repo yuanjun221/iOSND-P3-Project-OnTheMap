@@ -19,7 +19,6 @@ extension OTMClient {
         let method: String = Methods.Session
         let parameters = [String: AnyObject]()
         let jsonBody = "{\"\(JsonBodyKeys.Udacity)\": {\"\(JsonBodyKeys.Username)\": \"\(username)\", \"\(JsonBodyKeys.Password)\": \"\(password)\"}}"
-        // let jsonBody = [JsonBodyKeys.Udacity : [JsonBodyKeys.Username : username, JsonBodyKeys.Password : password]]
 
         taskForPOSTMethod(method, parameters: parameters, jsonBody: jsonBody, host: .Udacity) { (results, error) in
             
